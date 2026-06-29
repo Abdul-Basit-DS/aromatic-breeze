@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ site_name }} – Premium Perfumes{% endblock %}
+{% block content %}
+
+<!-- HERO SLIDER -->
+{% if banners %}
+<section>
+  <div class="swiper hero-swiper">
+    <div class="swiper-wrapper">
+      {% for b in banners %}
+      <div class="swiper-slide hero-slide" style="background-image:url('{{ b.image_desktop.url }}');">
+        <div class="hero-overlay" style="background:{{ b.overlay_color }};"></div>
+        <div class="container">
+          <div class="hero-content">
+            <h1>{{ b.title }}</h1>
+            {% if b.subtitle %}<p>{{ b.subtitle }}</p>{% endif %}
+            {% if b.button_text %}<a href="{{ b.button_url }}" class="hero-btn"><i class="fas fa-shopping-bag"></i> {{ b.button_text }}</a>{% endif %}
+            {% if b.button_text_2 %}<a href="{{ b.button_url_2 }}" class="hero-btn-2">{{ b.button_text_2 }}</a>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination"></div>
+  </div>
+</section>
+{% else %}
+<!-- Placeholder when no banner added yet -->
+<section style="background:linear-gradient(135deg,#1a1a2e 0%,#2a2a42 100%);height:520px;display:flex;align-items:center;">
+  <div class="container">
+    <div style="max-width:600px;">
+      <p style="color:#c9a84c;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Welcome to</p>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);color:#fff;font-weight:700;margin-bottom:16px;">{{ site_name }}</h1>
+      <p style="color:rgba(255,255,255,.8);font-size:16px;margin-bottom:28px;">Discover your signature fragrance from our premium collection.</p>
+      <a href="{% url 'shop:shop' %}" class="hero-btn"><i class="fas fa-shopping-bag"></i> Shop Now</a>
+      <p style="color:rgba(255,255,255,.4);font-size:12px;margin-top:20px;"><i class="fas fa-info-circle"></i> Add banners from Admin → Shop → Banners</p>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- TRUST FEATURES -->
+{% if trust_features %}
+<section class="trust-section">
+  <div class="container-fluid px-0">
+    <div class="trust-grid">
+      {% for f in trust_features %}
+      <div class="trust-item">
+        <div class="t-icon"><i class="{{ f.icon }}"></i></div>
+        <div>
+          <h6>{{ f.title }}</h6>
+          <p>{{ f.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CATEGORIES -->
+<!-- CATEGORIES -->
+{% if categories %}
+<section class="sec-pad bg-warm">
+  <div class="container">
+    <div class="sec-head-center">
+      <span class="sec-label">Browse By</span>
+      <h2 class="sec-title">Shop by Collection</h2>
+      <div class="sec-div sec-div-c"></div>
+    </div>
+
+    <!-- Desktop Grid -->
+    <div class="row g-3 justify-content-center d-none d-md-flex">
+      {% for cat in categories %}
+      <div class="col-md-4 col-lg-2">
+        <a href="{% url 'shop:category' cat.slug %}" class="cat-card">
+          {% if cat.image %}
+          <div class="cat-img-wrap"><img src="{{ cat.image.url }}" alt="{{ cat.name }}"></div>
+          {% else %}
+          <div class="cat-icon-box"><i class="{{ cat.icon|default:'fas fa-spray-can' }}"></i></div>
+          {% endif %}
+          <div class="cat-name">{{ cat.name }}</div>
+          <div class="cat-count">{{ cat.get_product_count }} Products</div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Mobile Scroll -->
+    <div class="d-md-none" style="overflow:hidden;margin:0 -12px;">
+      <div id="catMobile" style="display:flex;gap:10px;padding:4px 12px 14px;width:max-content;cursor:grab;">
+        {% for cat in categories %}
+        <a href="{% url 'shop:category' cat.slug %}"
+          style="display:flex;flex-direction:column;align-items:center;background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:12px 8px;width:90px;flex-shrink:0;text-decoration:none;color:var(--dark);">
+          {% if cat.image %}
+          <div style="width:62px;height:62px;border-radius:50%;overflow:hidden;border:2px solid var(--bdr);margin-bottom:8px;">
+            <img src="{{ cat.image.url }}" alt="{{ cat.name }}" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          {% else %}
+          <div style="width:62px;height:62px;border-radius:50%;background:#fff8e6;display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:1.5rem;color:var(--gold);border:2px solid #f0e0b0;">
+            <i class="{{ cat.icon|default:'fas fa-spray-can' }}"></i>
+          </div>
+          {% endif %}
+          <div style="font-size:11px;font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:82px;">{{ cat.name }}</div>
+          <div style="font-size:10px;color:#999;text-align:center;">{{ cat.get_product_count }} Products</div>
+        </a>
+        {% endfor %}
+        <!-- Clone for loop -->
+        {% for cat in categories %}
+        <a href="{% url 'shop:category' cat.slug %}"
+          style="display:flex;flex-direction:column;align-items:center;background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:12px 8px;width:90px;flex-shrink:0;text-decoration:none;color:var(--dark);">
+          {% if cat.image %}
+          <div style="width:62px;height:62px;border-radius:50%;overflow:hidden;border:2px solid var(--bdr);margin-bottom:8px;">
+            <img src="{{ cat.image.url }}" alt="{{ cat.name }}" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          {% else %}
+          <div style="width:62px;height:62px;border-radius:50%;background:#fff8e6;display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:1.5rem;color:var(--gold);border:2px solid #f0e0b0;">
+            <i class="{{ cat.icon|default:'fas fa-spray-can' }}"></i>
+          </div>
+          {% endif %}
+          <div style="font-size:11px;font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:82px;">{{ cat.name }}</div>
+          <div style="font-size:10px;color:#999;text-align:center;">{{ cat.get_product_count }} Products</div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endif %}
+
+<!-- FEATURED PRODUCTS -->
+{% if featured_products %}
+<section class="sec-pad">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <span class="sec-label">Hand Picked</span>
+        <h2 class="sec-title">Featured Products</h2>
+        <div class="sec-div"></div>
+      </div>
+      <a href="{% url 'shop:shop' %}?featured=1" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="prods-grid">
+      {% for product in featured_products|slice:":4" %}{% include 'partials/product_card.html' %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- NEW ARRIVALS -->
+{% if new_arrivals %}
+<section class="sec-pad bg-warm">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <span class="sec-label">Just Landed</span>
+        <h2 class="sec-title">New Arrivals</h2>
+        <div class="sec-div"></div>
+      </div>
+      <a href="{% url 'shop:shop' %}?new_arrival=1" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="prods-grid">
+      {% for product in new_arrivals|slice:":4" %}{% include 'partials/product_card.html' %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- PROMO BANNER -->
+{% if promo_banner %}
+<section style="position:relative;background-image:url('{{ promo_banner.image_desktop.url }}');background-size:cover;background-position:center;min-height:220px;display:flex;align-items:center;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:{{ promo_banner.overlay_color }};"></div>
+  <div class="container position-relative" style="z-index:2;padding:40px 20px;">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-8 col-md-10 col-12">
+        {% if promo_banner.subtitle %}
+        <p style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold-l);margin-bottom:8px;">{{ promo_banner.subtitle }}</p>
+        {% endif %}
+        <h2 style="font-family:var(--serif);font-size:clamp(1.2rem,3vw,2.2rem);font-weight:700;color:#fff;margin-bottom:12px;line-height:1.3;">{{ promo_banner.title }}</h2>
+        {% if promo_banner.button_text %}
+        <a href="{{ promo_banner.button_url }}" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#fff;padding:10px 24px;border-radius:50px;font-size:13px;font-weight:700;transition:.3s;">
+          <i class="fas fa-bolt"></i> {{ promo_banner.button_text }}
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- GIFT FOR HER -->
+{% if gift_for_her %}
+<section class="sec-pad">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <span class="sec-label">For Her</span>
+        <h2 class="sec-title">Gift For Her</h2>
+        <div class="sec-div"></div>
+      </div>
+      <a href="{% url 'shop:shop' %}?gender=women" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="prods-grid">
+      {% for product in gift_for_her|slice:":4" %}{% include 'partials/product_card.html' %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- BEST SELLERS -->
+{% if best_sellers %}
+<section class="sec-pad bg-warm">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <span class="sec-label">Top Picks</span>
+        <h2 class="sec-title">Best Sellers</h2>
+        <div class="sec-div"></div>
+      </div>
+      <a href="{% url 'shop:shop' %}?best_seller=1" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="prods-grid">
+      {% for product in best_sellers|slice:":4" %}{% include 'partials/product_card.html' %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CUSTOMER REVIEWS -->
+{% if customer_reviews %}
+<section class="sec-pad" style="background:var(--dark);">
+  <div class="container">
+    <div class="sec-head-center">
+      <span class="sec-label" style="color:var(--gold-l);">What Customers Say</span>
+      <h2 class="sec-title" style="color:#fff;">Customer Reviews</h2>
+      <div class="sec-div sec-div-c"></div>
+    </div>
+    <div class="swiper reviews-swiper mt-4">
+      <div class="swiper-wrapper">
+        {% for r in customer_reviews %}
+        <div class="swiper-slide">
+          <div class="rev-card">
+            <div class="rev-stars">{% for i in "12345" %}{% if forloop.counter <= r.rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}{% endfor %}</div>
+            <p class="rev-text">"{{ r.body|truncatewords:25 }}"</p>
+            <div class="rev-name">— {{ r.customer_name }}</div>
+            <div class="rev-meta">{{ r.product.name }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="swiper-button-next reviews-next" style="color:var(--gold)!important;"></div>
+      <div class="swiper-button-prev reviews-prev" style="color:var(--gold)!important;"></div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- LATEST BLOG -->
+{% if latest_blogs %}
+<section class="sec-pad">
+  <div class="container">
+    <div class="sec-head-center">
+      <span class="sec-label">From Our Journal</span>
+      <h2 class="sec-title">Latest Articles</h2>
+      <div class="sec-div sec-div-c"></div>
+    </div>
+    <div class="row g-4 mt-2">
+      {% for post in latest_blogs %}
+      <div class="col-md-4">
+        <div class="blog-card">
+          <div class="blog-img"><a href="{{ post.get_absolute_url }}"><img src="{{ post.featured_image.url }}" alt="{{ post.title }}" loading="lazy"></a></div>
+          <div class="blog-body">
+            {% if post.category %}<div class="blog-cat">{{ post.category.name }}</div>{% endif %}
+            <h5 class="blog-title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h5>
+            <div class="blog-meta"><span><i class="fas fa-calendar me-1"></i>{{ post.published_at|date:"d M Y" }}</span><span><i class="fas fa-clock me-1"></i>{{ post.reading_time }} min</span></div>
+            {% if post.excerpt %}<p class="blog-exc">{{ post.excerpt|truncatewords:18 }}</p>{% endif %}
+            <a href="{{ post.get_absolute_url }}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      <a href="{% url 'blog:blog_list' %}" class="view-all">View All Articles <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
+{% block extra_js %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(window.innerWidth > 575) return;
+  
+  const wrap = document.querySelector('.categories-scroll-wrap');
+  const row = document.querySelector('.categories-row');
+  if(!wrap || !row) return;
+
+  // Clone items for infinite loop
+  const items = row.innerHTML;
+  row.innerHTML = items + items + items;
+
+  const itemWidth = 110; // card width + gap
+  const totalItems = row.children.length / 3;
+  const startPos = totalItems * itemWidth;
+  
+  let pos = startPos;
+  let speed = 0.6;
+  let isPaused = false;
+  let isDragging = false;
+  let startX = 0;
+  let startPos2 = 0;
+  let animFrame;
+
+  row.style.transform = `translateX(-${pos}px)`;
+
+  function animate(){
+    if(!isPaused && !isDragging){
+      pos += speed;
+      // Loop reset
+      const end = totalItems * 2 * itemWidth;
+      if(pos >= end) pos = startPos;
+      if(pos <= 0) pos = startPos;
+      row.style.transform = `translateX(-${pos}px)`;
+    }
+    animFrame = requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  // Touch support
+  row.addEventListener('touchstart', function(e){
+    isPaused = true;
+    isDragging = true;
+    startX = e.touches[0].clientX;
+    startPos2 = pos;
+  }, {passive:true});
+
+  row.addEventListener('touchmove', function(e){
+    if(!isDragging) return;
+    const diff = startX - e.touches[0].clientX;
+    pos = startPos2 + diff;
+    row.style.transform = `translateX(-${pos}px)`;
+  }, {passive:true});
+
+  row.addEventListener('touchend', function(){
+    isDragging = false;
+    setTimeout(() => { isPaused = false; }, 1500);
+  });
+
+  // Click support — navigate to category
+  row.querySelectorAll('.cat-card').forEach(card => {
+    card.addEventListener('click', function(e){
+      if(isDragging) { e.preventDefault(); return; }
+      window.location.href = this.getAttribute('href');
+    });
+  });
+});
+</script>
+{% endblock %}

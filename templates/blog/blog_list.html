@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Blog – {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-banner">
+  <div class="container text-center text-white py-5">
+    <h1 class="page-banner-title">Our Blog</h1>
+    <p class="page-banner-sub">Fragrance guides, perfume tips, buying advice & more</p>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb justify-content-center">
+        <li class="breadcrumb-item"><a href="{% url 'shop:home' %}" class="text-gold">Home</a></li>
+        <li class="breadcrumb-item active text-white-50">Blog</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-4">
+  <!-- Mobile Search (top) -->
+  <div class="col-12 d-lg-none">
+    <form action="{% url 'blog:blog_list' %}" method="get" style="display:flex;border:1.5px solid var(--bdr);border-radius:8px;overflow:hidden;margin-bottom:4px;">
+      <input type="text" name="q" placeholder="Search articles..." value="{{ search_q }}" style="flex:1;border:none;padding:10px 14px;font-size:13px;font-family:var(--sans);outline:none;">
+      <button type="submit" style="background:var(--gold);border:none;padding:0 16px;color:#fff;font-size:14px;cursor:pointer;"><i class="fas fa-search"></i></button>
+    </form>
+  </div>
+
+    <!-- MAIN -->
+    <div class="col-lg-8 order-1">
+
+      {% if search_q or active_category or active_tag %}
+      <div style="background:var(--bg);border:1px solid var(--bdr);border-radius:8px;padding:10px 16px;margin-bottom:20px;font-size:13px;">
+        <span style="color:#999;">Showing results for:</span>
+        {% if search_q %}<span style="background:var(--dark);color:#fff;font-size:11px;padding:3px 10px;border-radius:20px;margin-left:6px;">Search: {{ search_q }}</span>{% endif %}
+        {% if active_category %}<span style="background:var(--dark);color:#fff;font-size:11px;padding:3px 10px;border-radius:20px;margin-left:6px;">{{ active_category.name }}</span>{% endif %}
+        {% if active_tag %}<span style="background:var(--dark);color:#fff;font-size:11px;padding:3px 10px;border-radius:20px;margin-left:6px;">{{ active_tag.name }}</span>{% endif %}
+        <a href="{% url 'blog:blog_list' %}" style="margin-left:10px;color:var(--gold);font-size:12px;">Clear ×</a>
+      </div>
+      {% endif %}
+
+      {% if posts %}
+      <div class="row g-4">
+        {% for post in posts %}
+        <div class="col-md-6">
+          <article style="background:#fff;border:1px solid var(--bdr);border-radius:14px;overflow:hidden;transition:.3s;height:100%;display:flex;flex-direction:column;" onmouseover="this.style.boxShadow='0 8px 30px rgba(0,0,0,.12)';this.style.transform='translateY(-4px)'" onmouseout="this.style.boxShadow='none';this.style.transform='none'">
+
+            <!-- Image -->
+            <div style="aspect-ratio:16/10;overflow:hidden;position:relative;">
+              <a href="{{ post.get_absolute_url }}">
+                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}"
+                  style="width:100%;height:100%;object-fit:cover;transition:transform .4s;"
+                  onmouseover="this.style.transform='scale(1.05)'"
+                  onmouseout="this.style.transform='scale(1)'">
+              </a>
+              {% if post.category %}
+              <a href="{{ post.category.get_absolute_url }}"
+                style="position:absolute;top:12px;left:12px;background:var(--gold);color:var(--dark);font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;">
+                {{ post.category.name }}
+              </a>
+              {% endif %}
+              {% if post.is_featured %}
+              <span style="position:absolute;top:12px;right:12px;background:var(--dark);color:var(--gold);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;">
+                ★ Featured
+              </span>
+              {% endif %}
+            </div>
+
+            <!-- Body -->
+            <div style="padding:20px;display:flex;flex-direction:column;flex:1;">
+              <div style="display:flex;gap:14px;font-size:12px;color:#999;margin-bottom:10px;flex-wrap:wrap;">
+                <span><i class="fas fa-calendar me-1" style="color:var(--gold);"></i>{{ post.published_at|date:"d M Y" }}</span>
+                <span><i class="fas fa-clock me-1" style="color:var(--gold);"></i>{{ post.reading_time }} min read</span>
+                <span><i class="fas fa-eye me-1" style="color:var(--gold);"></i>{{ post.view_count }} views</span>
+              </div>
+
+              <h5 style="font-family:var(--serif);font-size:17px;font-weight:700;color:var(--dark);margin-bottom:10px;line-height:1.4;">
+                <a href="{{ post.get_absolute_url }}" style="color:inherit;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--dark)'">
+                  {{ post.title }}
+                </a>
+              </h5>
+
+              {% if post.excerpt %}
+              <p style="font-size:13px;color:#666;line-height:1.7;margin-bottom:16px;flex:1;">
+                {{ post.excerpt|truncatewords:20 }}
+              </p>
+              {% endif %}
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;">
+                {% if post.author %}
+                <span style="font-size:12px;color:#999;">
+                  <i class="fas fa-user-circle me-1" style="color:var(--gold);"></i>
+                  {{ post.author.get_short_name }}
+                </span>
+                {% endif %}
+                <a href="{{ post.get_absolute_url }}"
+                  style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;">
+                  Read More <i class="fas fa-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+
+          </article>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      {% if posts.has_other_pages %}
+      <nav class="d-flex justify-content-center mt-5">
+        <ul class="pagination pag">
+          {% if posts.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page={{ posts.previous_page_number }}{% if search_q %}&q={{ search_q }}{% endif %}"><i class="fas fa-chevron-left"></i></a></li>
+          {% endif %}
+          {% for num in posts.paginator.page_range %}
+          <li class="page-item {% if posts.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}{% if search_q %}&q={{ search_q }}{% endif %}">{{ num }}</a>
+          </li>
+          {% endfor %}
+          {% if posts.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ posts.next_page_number }}{% if search_q %}&q={{ search_q }}{% endif %}"><i class="fas fa-chevron-right"></i></a></li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+
+      {% else %}
+      <div style="text-align:center;padding:60px 0;">
+        <i class="fas fa-newspaper fa-4x mb-3" style="color:#e8e0d0;"></i>
+        <h4 style="font-family:var(--serif);color:var(--dark);margin-bottom:8px;">No Blog Posts Yet</h4>
+        <p style="color:#999;">Check back soon for fragrance guides and tips.</p>
+      </div>
+      {% endif %}
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="col-lg-4 blog-sidebar-col">
+      <div style="position:sticky;top:90px;">
+
+        <!-- Search -->
+        <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:20px;margin-bottom:20px;">
+          <h5 style="font-family:var(--serif);font-size:16px;color:var(--dark);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bdr);">Search Articles</h5>
+          <form action="{% url 'blog:blog_list' %}" method="get" style="display:flex;border:1.5px solid var(--bdr);border-radius:8px;overflow:hidden;">
+            <input type="text" name="q" placeholder="Search..." value="{{ search_q }}"
+              style="flex:1;border:none;padding:10px 14px;font-size:13px;font-family:var(--sans);outline:none;">
+            <button type="submit" style="background:var(--gold);border:none;padding:0 16px;color:#fff;font-size:14px;cursor:pointer;">
+              <i class="fas fa-search"></i>
+            </button>
+          </form>
+        </div>
+
+        <!-- Categories -->
+        {% if blog_categories %}
+        <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:20px;margin-bottom:20px;">
+          <h5 style="font-family:var(--serif);font-size:16px;color:var(--dark);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bdr);">Categories</h5>
+          {% for cat in blog_categories %}
+          <a href="{{ cat.get_absolute_url }}"
+            style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f5f0e8;font-size:13px;color:#555;transition:.2s;"
+            onmouseover="this.style.color='var(--gold)';this.style.paddingLeft='6px'"
+            onmouseout="this.style.color='#555';this.style.paddingLeft='0'">
+            {{ cat.name }}
+            <span style="background:var(--bg);color:#999;font-size:11px;padding:2px 8px;border-radius:10px;">{{ cat.post_count }}</span>
+          </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Recent Posts -->
+        {% if recent_posts %}
+        <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:20px;margin-bottom:20px;">
+          <h5 style="font-family:var(--serif);font-size:16px;color:var(--dark);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bdr);">Recent Posts</h5>
+          {% for p in recent_posts %}
+          <div style="display:flex;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f5f0e8;">
+            <a href="{{ p.get_absolute_url }}" style="width:65px;height:56px;border-radius:8px;overflow:hidden;flex-shrink:0;display:block;">
+              <img src="{{ p.featured_image.url }}" alt="{{ p.title }}" style="width:100%;height:100%;object-fit:cover;">
+            </a>
+            <div>
+              <a href="{{ p.get_absolute_url }}" style="font-size:13px;font-weight:600;color:var(--dark);line-height:1.4;display:block;margin-bottom:4px;"
+                onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--dark)'">
+                {{ p.title|truncatewords:7 }}
+              </a>
+              <span style="font-size:11px;color:#bbb;">{{ p.published_at|date:"d M Y" }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Popular Posts -->
+        {% if popular_posts %}
+        <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:20px;margin-bottom:20px;">
+          <h5 style="font-family:var(--serif);font-size:16px;color:var(--dark);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bdr);">Popular Posts</h5>
+          {% for p in popular_posts %}
+          <div style="display:flex;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f5f0e8;">
+            <a href="{{ p.get_absolute_url }}" style="width:65px;height:56px;border-radius:8px;overflow:hidden;flex-shrink:0;display:block;">
+              <img src="{{ p.featured_image.url }}" alt="{{ p.title }}" style="width:100%;height:100%;object-fit:cover;">
+            </a>
+            <div>
+              <a href="{{ p.get_absolute_url }}" style="font-size:13px;font-weight:600;color:var(--dark);line-height:1.4;display:block;margin-bottom:4px;"
+                onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--dark)'">
+                {{ p.title|truncatewords:7 }}
+              </a>
+              <span style="font-size:11px;color:#bbb;"><i class="fas fa-eye me-1"></i>{{ p.view_count }} views</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Tags -->
+        {% if active_tags %}
+        <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:20px;margin-bottom:20px;">
+          <h5 style="font-family:var(--serif);font-size:16px;color:var(--dark);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bdr);">Explore Topics</h5>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            {% for tag in active_tags %}
+            <a href="{{ tag.get_absolute_url }}"
+              style="display:inline-block;padding:5px 12px;border:1px solid var(--bdr);border-radius:20px;font-size:12px;color:#555;transition:.2s;"
+              onmouseover="this.style.background='var(--gold)';this.style.borderColor='var(--gold)';this.style.color='var(--dark)'"
+              onmouseout="this.style.background='';this.style.borderColor='var(--bdr)';this.style.color='#555'">
+              {{ tag.name }}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Archive -->
+        {% if archive %}
+        <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:20px;">
+          <h5 style="font-family:var(--serif);font-size:16px;color:var(--dark);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bdr);">Archive</h5>
+          {% for item in archive %}
+          <a href="{% url 'blog:blog_list' %}?month={{ item.month|date:'Y-m' }}"
+            style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #f5f0e8;font-size:13px;color:#555;"
+            onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#555'">
+            {{ item.month|date:"F Y" }}
+            <span style="background:var(--bg);color:#999;font-size:11px;padding:2px 8px;border-radius:10px;">{{ item.count }}</span>
+          </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

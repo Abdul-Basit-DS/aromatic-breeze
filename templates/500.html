@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Server Error – {{ site_name }}{% endblock %}
+{% block newsletter %}{% endblock %}
+{% block content %}
+<div class="error-page">
+  <div class="container text-center py-5">
+    <div class="error-number">500</div>
+    <div class="error-icon"><i class="fas fa-tools"></i></div>
+    <h2 class="error-title">Something Went Wrong</h2>
+    <p class="error-sub">We're working on fixing this. Please try again shortly.</p>
+    <a href="{% url 'shop:home' %}" class="btn btn-gold px-4 mt-3"><i class="fas fa-home me-2"></i>Go Home</a>
+  </div>
+</div>
+{% endblock %}

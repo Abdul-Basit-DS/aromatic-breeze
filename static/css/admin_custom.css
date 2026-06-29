@@ -1,0 +1,806 @@
+/* ═══════════════════════════════════════════════════════════
+   THE AROMATIC BREEZE — LUXURY ADMIN PANEL THEME
+   Black & Gold Premium Design
+═══════════════════════════════════════════════════════════ */
+
+:root {
+  --gold: #d4af37;
+  --gold-light: #f0d060;
+  --gold-dark: #b8960c;
+  --dark: #0d0d1a;
+  --dark-2: #12121f;
+  --dark-3: #1a1a2e;
+  --dark-4: #22223a;
+  --dark-5: #2a2a42;
+  --sidebar-w: 240px;
+  --white: #ffffff;
+  --text-muted: rgba(255,255,255,0.5);
+  --border: rgba(212,175,55,0.15);
+  --radius: 10px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --transition: all 0.25s ease;
+}
+
+/* ── Global Reset ─────────────────────────────────────────── */
+* { box-sizing: border-box; }
+body {
+  background: var(--dark) !important;
+  color: rgba(255,255,255,0.85) !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 13px !important;
+  margin: 0 !important;
+}
+
+a { color: var(--gold) !important; text-decoration: none !important; transition: var(--transition) !important; }
+a:hover { color: var(--gold-light) !important; }
+
+/* ── Header ──────────────────────────────────────────────── */
+#header {
+  background: linear-gradient(135deg, var(--dark-2) 0%, var(--dark-3) 100%) !important;
+  border-bottom: 2px solid var(--gold) !important;
+  padding: 0 24px !important;
+  height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  box-shadow: 0 2px 20px rgba(212,175,55,0.2) !important;
+}
+
+#branding h1 {
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  color: var(--gold) !important;
+  margin: 0 !important;
+}
+
+#branding h1 a {
+  color: var(--gold) !important;
+  font-family: 'Georgia', serif !important;
+}
+
+#user-tools {
+  font-size: 12px !important;
+  color: rgba(255,255,255,0.7) !important;
+}
+
+#user-tools a {
+  color: var(--gold) !important;
+  margin-left: 12px !important;
+  padding: 4px 12px !important;
+  border: 1px solid rgba(212,175,55,0.3) !important;
+  border-radius: 20px !important;
+  font-size: 11px !important;
+}
+
+#user-tools a:hover {
+  background: var(--gold) !important;
+  color: var(--dark) !important;
+}
+
+/* ── Breadcrumbs ─────────────────────────────────────────── */
+div.breadcrumbs {
+  background: var(--dark-3) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 10px 24px !important;
+  font-size: 12px !important;
+  color: var(--text-muted) !important;
+}
+
+div.breadcrumbs a { color: var(--gold) !important; }
+
+/* ── Main Content ────────────────────────────────────────── */
+#content-main, #content {
+  background: transparent !important;
+  padding: 24px !important;
+}
+
+#container {
+  min-height: 100vh !important;
+  background: var(--dark) !important;
+}
+
+/* ── Page Title ──────────────────────────────────────────── */
+#content h1, .content-title {
+  color: var(--white) !important;
+  font-size: 1.4rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 20px !important;
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid var(--border) !important;
+  font-family: 'Georgia', serif !important;
+}
+
+/* ── Dashboard App Modules ───────────────────────────────── */
+#content-main .app-blog,
+#content-main .app-shop,
+#content-main .app-orders,
+#content-main .app-accounts,
+#content-main .app-pages,
+#content-main .app-reviews,
+#content-main .app-newsletter,
+#content-main .app-coupons,
+.module {
+  background: var(--dark-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  margin-bottom: 20px !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow) !important;
+}
+
+/* Module headers (BLOG, SHOP, ORDERS etc.) */
+.module caption,
+.module > h2,
+.module > table > caption {
+  background: linear-gradient(90deg, var(--dark-4) 0%, var(--dark-5) 100%) !important;
+  color: var(--gold) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  padding: 10px 16px !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  text-align: left !important;
+}
+
+/* Module table rows */
+.module table tr {
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.module table tr:last-child {
+  border-bottom: none !important;
+}
+
+.module table td {
+  padding: 10px 16px !important;
+  color: rgba(255,255,255,0.8) !important;
+  vertical-align: middle !important;
+}
+
+.module table th {
+  padding: 10px 16px !important;
+  color: rgba(255,255,255,0.6) !important;
+  font-weight: 600 !important;
+  background: transparent !important;
+}
+
+/* Add / Change links */
+.addlink, .changelink, .viewlink {
+  color: var(--gold) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 3px 10px !important;
+  border: 1px solid rgba(212,175,55,0.3) !important;
+  border-radius: 4px !important;
+  transition: var(--transition) !important;
+}
+
+.addlink::before { content: "+ " !important; }
+
+.addlink:hover, .changelink:hover, .viewlink:hover {
+  background: var(--gold) !important;
+  color: var(--dark) !important;
+  border-color: var(--gold) !important;
+}
+
+/* ── Sidebar Navigation ──────────────────────────────────── */
+#nav-sidebar {
+  background: var(--dark-2) !important;
+  border-right: 1px solid var(--border) !important;
+  width: var(--sidebar-w) !important;
+}
+
+.toggle-nav-sidebar {
+  background: var(--dark-3) !important;
+  border-right: 1px solid var(--border) !important;
+  color: var(--gold) !important;
+}
+
+/* ── Change List (Table) ─────────────────────────────────── */
+#changelist {
+  background: transparent !important;
+}
+
+#changelist-filter {
+  background: var(--dark-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+#changelist-filter h2 {
+  background: var(--dark-4) !important;
+  color: var(--gold) !important;
+  font-size: 11px !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  padding: 12px 16px !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+#changelist-filter h3 {
+  color: rgba(255,255,255,0.6) !important;
+  font-size: 11px !important;
+  padding: 10px 16px 4px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  margin: 0 !important;
+}
+
+#changelist-filter ul {
+  padding: 4px 0 12px !important;
+  margin: 0 !important;
+}
+
+#changelist-filter li {
+  padding: 3px 16px !important;
+}
+
+#changelist-filter li a {
+  color: rgba(255,255,255,0.7) !important;
+  font-size: 12px !important;
+}
+
+#changelist-filter li.selected a {
+  color: var(--gold) !important;
+  font-weight: 700 !important;
+}
+
+/* Results table */
+#result_list {
+  background: var(--dark-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow) !important;
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+#result_list thead th {
+  background: var(--dark-4) !important;
+  color: var(--gold) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  padding: 12px 14px !important;
+  border-bottom: 2px solid var(--gold) !important;
+  border-right: 1px solid var(--border) !important;
+  white-space: nowrap !important;
+}
+
+#result_list thead th a {
+  color: var(--gold) !important;
+}
+
+#result_list thead th.sorted {
+  background: var(--dark-5) !important;
+}
+
+#result_list tbody tr {
+  border-bottom: 1px solid var(--border) !important;
+  transition: var(--transition) !important;
+}
+
+#result_list tbody tr:hover {
+  background: rgba(212,175,55,0.05) !important;
+}
+
+#result_list tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.02) !important;
+}
+
+#result_list tbody tr:nth-child(even):hover {
+  background: rgba(212,175,55,0.05) !important;
+}
+
+#result_list td {
+  padding: 11px 14px !important;
+  color: rgba(255,255,255,0.8) !important;
+  border-right: 1px solid rgba(212,175,55,0.05) !important;
+  vertical-align: middle !important;
+}
+
+#result_list td a {
+  color: var(--gold) !important;
+  font-weight: 600 !important;
+}
+
+/* ── Search Bar ──────────────────────────────────────────── */
+#toolbar {
+  background: var(--dark-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 12px 16px !important;
+  margin-bottom: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+#searchbar {
+  background: var(--dark-4) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  color: var(--white) !important;
+  padding: 8px 14px !important;
+  font-size: 13px !important;
+  outline: none !important;
+  width: 280px !important;
+  transition: var(--transition) !important;
+}
+
+#searchbar:focus {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.15) !important;
+}
+
+#toolbar input[type=submit] {
+  background: var(--gold) !important;
+  border: none !important;
+  color: var(--dark) !important;
+  font-weight: 700 !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+  transition: var(--transition) !important;
+}
+
+#toolbar input[type=submit]:hover {
+  background: var(--gold-light) !important;
+}
+
+/* ── Action Bar ──────────────────────────────────────────── */
+.actions {
+  background: var(--dark-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  padding: 10px 14px !important;
+  margin-bottom: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.actions select {
+  background: var(--dark-4) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--white) !important;
+  padding: 6px 10px !important;
+  border-radius: 6px !important;
+}
+
+.actions button, .actions input[type=button] {
+  background: var(--dark-5) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--gold) !important;
+  padding: 6px 14px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  transition: var(--transition) !important;
+}
+
+.actions button:hover {
+  background: var(--gold) !important;
+  color: var(--dark) !important;
+  border-color: var(--gold) !important;
+}
+
+/* ── Pagination ──────────────────────────────────────────── */
+.paginator {
+  background: var(--dark-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  padding: 10px 16px !important;
+  color: rgba(255,255,255,0.6) !important;
+  font-size: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-top: 12px !important;
+}
+
+.paginator a {
+  padding: 4px 10px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  color: var(--gold) !important;
+  font-size: 12px !important;
+}
+
+.paginator a:hover {
+  background: var(--gold) !important;
+  color: var(--dark) !important;
+}
+
+.paginator .this-page {
+  background: var(--gold) !important;
+  color: var(--dark) !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-weight: 700 !important;
+}
+
+/* ── Change Form ─────────────────────────────────────────── */
+.change-form .form-row,
+fieldset.module .form-row {
+  background: transparent !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 12px 0 !important;
+}
+
+fieldset.module {
+  background: var(--dark-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 0 !important;
+  margin-bottom: 20px !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow) !important;
+}
+
+fieldset.module h2 {
+  background: linear-gradient(90deg, var(--dark-4) 0%, var(--dark-5) 100%) !important;
+  color: var(--gold) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  padding: 12px 20px !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+fieldset.module .form-row {
+  padding: 12px 20px !important;
+}
+
+/* Labels */
+.form-row label,
+label {
+  color: rgba(255,255,255,0.7) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Inputs */
+input[type=text],
+input[type=email],
+input[type=password],
+input[type=number],
+input[type=url],
+input[type=date],
+input[type=datetime-local],
+textarea,
+select {
+  background: var(--dark-4) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  color: var(--white) !important;
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+  transition: var(--transition) !important;
+  outline: none !important;
+}
+
+input[type=text]:focus,
+input[type=email]:focus,
+input[type=password]:focus,
+input[type=number]:focus,
+input[type=url]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.15) !important;
+}
+
+select option {
+  background: var(--dark-3) !important;
+  color: var(--white) !important;
+}
+
+/* Checkboxes */
+input[type=checkbox] {
+  accent-color: var(--gold) !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* Help text */
+.help, p.help {
+  color: rgba(255,255,255,0.4) !important;
+  font-size: 11px !important;
+  margin-top: 4px !important;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.submit-row {
+  background: var(--dark-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 14px 20px !important;
+  display: flex !important;
+  gap: 10px !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  margin-top: 20px !important;
+  box-shadow: var(--shadow) !important;
+}
+
+input[type=submit],
+.button,
+.default {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%) !important;
+  color: var(--dark) !important;
+  border: none !important;
+  padding: 10px 20px !important;
+  border-radius: 6px !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  letter-spacing: 0.5px !important;
+  transition: var(--transition) !important;
+  text-transform: uppercase !important;
+}
+
+input[type=submit]:hover, .button:hover {
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 15px rgba(212,175,55,0.4) !important;
+}
+
+.deletelink, .deletelink-box a {
+  background: #3a1515 !important;
+  color: #ff6b6b !important;
+  border: 1px solid #5a2020 !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+}
+
+.deletelink:hover { background: #5a1515 !important; color: #ff4444 !important; }
+
+/* ── Messages / Alerts ───────────────────────────────────── */
+.messagelist {
+  margin: 0 0 16px !important;
+  padding: 0 !important;
+}
+
+.messagelist li {
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  margin-bottom: 8px !important;
+  font-size: 13px !important;
+  border-left: 4px solid !important;
+  list-style: none !important;
+}
+
+.messagelist .success {
+  background: rgba(25, 135, 84, 0.15) !important;
+  border-color: #198754 !important;
+  color: #75e8a8 !important;
+}
+
+.messagelist .warning {
+  background: rgba(255, 193, 7, 0.1) !important;
+  border-color: var(--gold) !important;
+  color: var(--gold-light) !important;
+}
+
+.messagelist .error {
+  background: rgba(220, 53, 69, 0.15) !important;
+  border-color: #dc3545 !important;
+  color: #ff8896 !important;
+}
+
+/* ── Inline Tables ───────────────────────────────────────── */
+.inline-group {
+  background: var(--dark-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  margin-bottom: 20px !important;
+  overflow: hidden !important;
+}
+
+.inline-group h2 {
+  background: var(--dark-4) !important;
+  color: var(--gold) !important;
+  font-size: 11px !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  padding: 12px 16px !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.tabular td, .tabular th {
+  background: transparent !important;
+  color: rgba(255,255,255,0.8) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 10px 12px !important;
+}
+
+.tabular thead th {
+  background: var(--dark-4) !important;
+  color: rgba(255,255,255,0.6) !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.add-row a {
+  color: var(--gold) !important;
+  font-size: 12px !important;
+}
+
+/* ── Related Widget ──────────────────────────────────────── */
+.selector {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.selector select {
+  flex: 1 !important;
+  min-height: 200px !important;
+}
+
+.selector-chooser li a {
+  background: var(--dark-4) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--gold) !important;
+  padding: 6px !important;
+  border-radius: 4px !important;
+  display: block !important;
+  margin: 2px 0 !important;
+  text-align: center !important;
+}
+
+/* ── Calendar / Date Widgets ─────────────────────────────── */
+.calendarbox, .clockbox {
+  background: var(--dark-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow) !important;
+}
+
+/* ── Dashboard Stats Panel (top summary) ─────────────────── */
+.dashboard-stats {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+  gap: 16px !important;
+  margin-bottom: 24px !important;
+}
+
+/* ── Recent Actions ──────────────────────────────────────── */
+#recent-actions-module {
+  background: var(--dark-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow) !important;
+}
+
+#recent-actions-module h2 {
+  background: var(--dark-4) !important;
+  color: var(--gold) !important;
+  font-size: 11px !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  padding: 12px 16px !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+#recent-actions-module h3 {
+  color: rgba(255,255,255,0.5) !important;
+  font-size: 11px !important;
+  padding: 10px 16px !important;
+  margin: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+#recent-actions-module ul {
+  margin: 0 !important;
+  padding: 8px 0 !important;
+}
+
+#recent-actions-module li {
+  padding: 8px 16px !important;
+  border-bottom: 1px solid var(--border) !important;
+  list-style: none !important;
+  font-size: 12px !important;
+  color: rgba(255,255,255,0.7) !important;
+}
+
+#recent-actions-module li:last-child { border-bottom: none !important; }
+
+/* ── Object Tools (top right buttons) ───────────────────── */
+ul.object-tools {
+  margin: 0 0 16px !important;
+  padding: 0 !important;
+  float: right !important;
+  display: flex !important;
+  gap: 8px !important;
+}
+
+ul.object-tools li { list-style: none !important; }
+
+ul.object-tools a {
+  background: var(--dark-4) !important;
+  border: 1px solid var(--gold) !important;
+  color: var(--gold) !important;
+  padding: 7px 16px !important;
+  border-radius: 20px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  display: block !important;
+}
+
+ul.object-tools a:hover {
+  background: var(--gold) !important;
+  color: var(--dark) !important;
+}
+
+/* ── Sortable header arrows ───────────────────────────────── */
+th.sorted .text span.small::after { color: var(--gold) !important; }
+th .text { color: var(--gold) !important; }
+
+/* ── Column selector ─────────────────────────────────────── */
+.col-action-checkbox input {
+  accent-color: var(--gold) !important;
+}
+
+/* ── Errornote ───────────────────────────────────────────── */
+.errornote {
+  background: rgba(220,53,69,0.15) !important;
+  border: 1px solid #dc3545 !important;
+  border-radius: 8px !important;
+  color: #ff8896 !important;
+  padding: 12px 16px !important;
+  margin-bottom: 16px !important;
+}
+
+ul.errorlist {
+  color: #ff6b6b !important;
+  font-size: 12px !important;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--dark-2); }
+::-webkit-scrollbar-thumb { background: var(--dark-5); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-dark); }
+
+/* ── Footer ──────────────────────────────────────────────── */
+#footer {
+  background: var(--dark-2) !important;
+  border-top: 1px solid var(--border) !important;
+  color: rgba(255,255,255,0.3) !important;
+  font-size: 11px !important;
+  padding: 12px 24px !important;
+  text-align: center !important;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 767px) {
+  #header { padding: 0 12px !important; }
+  #content-main, #content { padding: 12px !important; }
+  #result_list { font-size: 12px !important; }
+  #result_list td, #result_list th { padding: 8px !important; }
+}

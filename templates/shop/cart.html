@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Shopping Cart – {{ site_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.cart-wrap{padding:40px 0 60px;}
+.cart-table-box{background:#fff;border:1px solid var(--bdr);border-radius:14px;overflow:hidden;}
+.cart-table{width:100%;border-collapse:collapse;}
+.cart-table thead tr{background:var(--bg);border-bottom:2px solid var(--bdr);}
+.cart-table thead th{padding:14px 20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#999;}
+.cart-table tbody tr{border-bottom:1px solid #f5f0e8;transition:.2s;}
+.cart-table tbody tr:hover{background:#fdfaf4;}
+.cart-table tbody tr:last-child{border-bottom:none;}
+.cart-table td{padding:16px 20px;vertical-align:middle;}
+.ct-product{display:flex;align-items:center;gap:14px;}
+.ct-thumb{width:72px;height:72px;border-radius:10px;object-fit:cover;border:1px solid var(--bdr);}
+.ct-name{font-weight:700;font-size:14px;color:var(--dark);}
+.ct-name:hover{color:var(--gold);}
+.ct-var{font-size:12px;color:#999;margin-top:3px;}
+.ct-price{font-size:15px;font-weight:600;color:var(--dark);}
+.ct-total{font-size:15px;font-weight:700;color:var(--dark);}
+.ct-qty{display:flex;border:1.5px solid var(--bdr);border-radius:8px;overflow:hidden;width:fit-content;}
+.ct-qty button{width:36px;height:38px;background:var(--bg);border:none;font-size:16px;cursor:pointer;transition:.2s;font-family:var(--sans);}
+.ct-qty button:hover{background:var(--gold);color:#fff;}
+.ct-qty input{width:48px;height:38px;border:none;border-left:1px solid var(--bdr);border-right:1px solid var(--bdr);text-align:center;font-size:14px;font-weight:700;font-family:var(--sans);-moz-appearance:textfield;}
+.ct-qty input::-webkit-outer-spin-button,.ct-qty input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.btn-rm-item{width:32px;height:32px;background:none;border:1px solid #f0d0d0;border-radius:50%;color:#e74c3c;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:.2s;}
+.btn-rm-item:hover{background:#e74c3c;color:#fff;border-color:#e74c3c;}
+.cart-summary-box{background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:24px;position:sticky;top:90px;}
+.cs-title{font-family:var(--serif);font-size:1.2rem;color:var(--dark);margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--bdr);}
+.cs-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;margin-bottom:12px;}
+.cs-total{display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:700;padding-top:14px;border-top:2px solid var(--bdr);margin-top:4px;}
+.cs-total-price{color:var(--gold);font-family:var(--serif);font-size:1.3rem;}
+.coupon-box{margin:16px 0;}
+.coupon-row{display:flex;border:1.5px solid var(--bdr);border-radius:8px;overflow:hidden;}
+.coupon-row input{flex:1;border:none;padding:10px 14px;font-size:13px;font-family:var(--sans);outline:none;background:transparent;}
+.coupon-row button{background:var(--gold);border:none;padding:0 18px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:.3s;white-space:nowrap;font-family:var(--sans);}
+.coupon-row button:hover{background:var(--gold-d);}
+.coupon-msg{font-size:12px;margin-top:6px;padding:6px 10px;border-radius:6px;}
+.coupon-ok{background:#d4edda;color:#155724;}
+.coupon-err{background:#f8d7da;color:#721c24;}
+.btn-checkout{width:100%;background:var(--gold);color:#fff;border:none;padding:15px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:.3s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;}
+.btn-checkout:hover{background:var(--gold-d);}
+.btn-continue{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#666;border:1px solid var(--bdr);padding:9px 20px;border-radius:50px;transition:.2s;margin-top:16px;}
+.btn-continue:hover{border-color:var(--gold);color:var(--gold);}
+@media(max-width:575px){
+  .cart-table-box{border-radius:10px;overflow:hidden;}
+  .cart-table thead{display:none;}
+  .cart-table tbody tr{
+    display:flex;
+    flex-direction:column;
+    border-bottom:1px solid var(--bdr);
+    padding:14px;
+    gap:8px;
+  }
+  .cart-table td{
+    border:none;
+    padding:0;
+    display:block;
+  }
+  .ct-product{gap:10px;}
+  .ct-thumb{width:60px;height:60px;border-radius:8px;}
+  .ct-name{font-size:13px;}
+  .ct-qty{margin-top:4px;}
+  .ct-price,.ct-total{font-size:14px;}
+  .btn-rm-item{align-self:flex-end;}
+  .cart-summary-box{
+    position:static !important;
+    margin-top:16px;
+  }
+  .cs-title{font-size:1rem;}
+  .btn-checkout{font-size:14px;padding:13px;}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-banner page-banner-sm">
+  <div class="container text-center text-white py-4">
+    <h1 class="page-banner-title">Shopping Cart</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb justify-content-center">
+        <li class="breadcrumb-item"><a href="{% url 'shop:home' %}" class="text-gold">Home</a></li>
+        <li class="breadcrumb-item active text-white-50">Cart</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container cart-wrap">
+  {% if items %}
+  <div class="row g-4">
+
+    <!-- Cart Items -->
+    <div class="col-lg-8">
+      <div class="cart-table-box">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="cartBody">
+            {% for item in items %}
+            <tr id="cartRow{{ item.id }}">
+              <td>
+                <div class="ct-product">
+                  {% with item.product.get_primary_image as img %}
+                  {% if img %}<img src="{{ img.image.url }}" alt="{{ item.product.name }}" class="ct-thumb">{% endif %}
+                  {% endwith %}
+                  <div>
+                    <a href="{{ item.product.get_absolute_url }}" class="ct-name">{{ item.product.name }}</a>
+                    {% if item.variation %}<div class="ct-var">Size: {{ item.variation.name }}</div>{% endif %}
+                  </div>
+                </div>
+              </td>
+              <td><span class="ct-price">Rs. {{ item.unit_price|floatformat:0 }}</span></td>
+              <td>
+                <div class="ct-qty">
+                  <button onclick="updateCart({{ item.id }}, {{ item.quantity|add:'-1' }})">−</button>
+                  <input type="number" value="{{ item.quantity }}" min="1"
+                    onchange="updateCart({{ item.id }}, this.value)" id="qty{{ item.id }}">
+                  <button onclick="updateCart({{ item.id }}, {{ item.quantity|add:'1' }})">+</button>
+                </div>
+              </td>
+              <td><span class="ct-total" id="itemTotal{{ item.id }}">Rs. {{ item.total_price|floatformat:0 }}</span></td>
+              <td>
+                <button class="btn-rm-item" onclick="removeCart({{ item.id }})" title="Remove">
+                  <i class="fas fa-times"></i>
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <a href="{% url 'shop:shop' %}" class="btn-continue">
+        <i class="fas fa-arrow-left"></i> Continue Shopping
+      </a>
+    </div>
+
+    <!-- Summary -->
+    <div class="col-lg-4">
+      <div class="cart-summary-box">
+        <div class="cs-title">Order Summary</div>
+
+        <div class="cs-row">
+          <span>Subtotal</span>
+          <strong id="csSubtotal">Rs. {{ subtotal|floatformat:0 }}</strong>
+        </div>
+
+        <!-- Coupon -->
+        <div class="coupon-box">
+          <div class="coupon-row">
+            <input type="text" id="couponCode" placeholder="Coupon code">
+            <button onclick="applyCoupon()">Apply</button>
+          </div>
+          <div id="couponMsg"></div>
+        </div>
+
+        <div class="cs-row" id="discountRow" style="display:none;color:#27ae60;">
+          <span>Discount</span>
+          <strong id="discountAmt"></strong>
+        </div>
+        <div class="cs-row">
+          <span>Shipping</span>
+          <span style="color:#999;font-size:13px;">Calculated at checkout</span>
+        </div>
+
+        <div class="cs-total">
+          <span>Total</span>
+          <span class="cs-total-price" id="csTotal">Rs. {{ subtotal|floatformat:0 }}</span>
+        </div>
+
+        <a href="{% url 'orders:checkout' %}" class="btn-checkout">
+          <i class="fas fa-lock"></i> Proceed to Checkout
+        </a>
+        <div style="text-align:center;margin-top:10px;font-size:12px;color:#999;">
+          <i class="fas fa-shield-alt me-1" style="color:var(--gold);"></i>Secure & Safe Checkout
+        </div>
+      </div>
+    </div>
+
+  </div>
+  {% else %}
+  <div class="text-center py-5" style="padding:80px 0!important;">
+    <i class="fas fa-shopping-bag fa-5x mb-4" style="color:#e8e0d0;"></i>
+    <h3 style="font-family:var(--serif);color:var(--dark);margin-bottom:10px;">Your Cart is Empty</h3>
+    <p style="color:#999;margin-bottom:28px;">Looks like you haven't added any perfumes yet.</p>
+    <a href="{% url 'shop:shop' %}" class="btn-gold-solid btn-lg">
+      <i class="fas fa-shopping-bag me-2"></i>Start Shopping
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const sym = 'Rs.';
+let currentSubtotal = {{ subtotal }};
+let discountAmt = 0;
+
+function updateCart(itemId, qty) {
+  qty = parseInt(qty);
+  if (qty < 1) { removeCart(itemId); return; }
+  fetch(`/cart/update/${itemId}/`, {
+    method: 'POST',
+    headers: {'X-CSRFToken': CSRF, 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest'},
+    body: `quantity=${qty}`
+  }).then(r => r.json()).then(d => {
+    if (d.status === 'removed') {
+      document.getElementById('cartRow' + itemId)?.remove();
+    } else {
+      if (d.item_total) document.getElementById('itemTotal' + itemId).textContent = sym + ' ' + Math.round(d.item_total).toLocaleString();
+    }
+    currentSubtotal = d.cart_subtotal;
+    updateSummary();
+    document.getElementById('cartBadge').textContent = d.cart_count;
+  });
+}
+
+function removeCart(itemId) {
+  fetch(`/cart/remove/${itemId}/`, {
+    method: 'POST',
+    headers: {'X-CSRFToken': CSRF, 'X-Requested-With': 'XMLHttpRequest'}
+  }).then(r => r.json()).then(d => {
+    document.getElementById('cartRow' + itemId)?.remove();
+    currentSubtotal = d.cart_subtotal;
+    updateSummary();
+    document.getElementById('cartBadge').textContent = d.cart_count;
+    if (d.cart_count == 0) location.reload();
+  });
+}
+
+function updateSummary() {
+  const finalTotal = currentSubtotal - discountAmt;
+  document.getElementById('csSubtotal').textContent = sym + ' ' + Math.round(currentSubtotal).toLocaleString();
+  document.getElementById('csTotal').textContent = sym + ' ' + Math.round(finalTotal).toLocaleString();
+}
+
+function applyCoupon() {
+  const code = document.getElementById('couponCode').value.trim();
+  const msgEl = document.getElementById('couponMsg');
+  if (!code) { msgEl.className = 'coupon-msg coupon-err'; msgEl.textContent = 'Please enter a coupon code.'; return; }
+
+  fetch('/coupons/validate/', {
+    method: 'POST',
+    headers: {'X-CSRFToken': CSRF, 'Content-Type': 'application/x-www-form-urlencoded'},
+    body: `code=${encodeURIComponent(code)}&subtotal=${currentSubtotal}`
+  }).then(r => r.json()).then(d => {
+    if (d.valid) {
+      discountAmt = d.discount;
+      msgEl.className = 'coupon-msg coupon-ok';
+      msgEl.textContent = `✓ ${d.message}`;
+      const discRow = document.getElementById('discountRow');
+      discRow.style.display = 'flex';
+      document.getElementById('discountAmt').textContent = `- ${sym} ${Math.round(d.discount).toLocaleString()}`;
+      updateSummary();
+    } else {
+      discountAmt = 0;
+      msgEl.className = 'coupon-msg coupon-err';
+      msgEl.textContent = `✗ ${d.message}`;
+      document.getElementById('discountRow').style.display = 'none';
+      updateSummary();
+    }
+  });
+}
+</script>
+{% endblock %}

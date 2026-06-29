@@ -1,0 +1,17 @@
+[Unit]
+Description=The Aromatic Breeze – Gunicorn
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/aromatic_breeze
+ExecStart=/var/www/aromatic_breeze/venv/bin/gunicorn \
+    --config /var/www/aromatic_breeze/deployment/gunicorn.conf.py \
+    config.wsgi:application
+EnvironmentFile=/var/www/aromatic_breeze/.env
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

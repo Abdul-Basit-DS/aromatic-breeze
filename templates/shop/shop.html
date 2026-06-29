@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Shop – {{ site_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Products proper grid */
+.shop-products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+@media(max-width:991px){.shop-products-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:575px){.shop-products-grid{grid-template-columns:repeat(2,1fr);gap:10px;}}
+
+/* Filter sidebar clean design */
+.filter-sidebar{background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:0;overflow:hidden;position:sticky;top:90px;}
+.filter-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--bdr);background:var(--bg);}
+.filter-head h5{font-family:var(--serif);font-size:16px;margin:0;color:var(--dark);}
+.filter-group{padding:16px 20px;border-bottom:1px solid #f5f0e8;}
+.filter-group:last-child{border-bottom:none;}
+.fg-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:10px;display:block;}
+.f-check-item{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;}
+.f-check-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer;}
+.f-check-item label{font-size:13px;color:#555;cursor:pointer;flex:1;}
+.f-check-item .fc{font-size:11px;color:#bbb;background:#f5f0e8;padding:1px 7px;border-radius:10px;}
+.size-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.size-chip-btn{padding:5px 12px;border:1.5px solid var(--bdr);border-radius:6px;font-size:12px;font-weight:600;color:#555;background:#fff;cursor:pointer;transition:.2s;font-family:var(--sans);}
+.size-chip-btn:has(input:checked){background:var(--dark);color:#fff;border-color:var(--dark);}
+.size-chip-btn input{display:none;}
+.price-inputs{display:flex;gap:8px;align-items:center;}
+.price-inp{width:90px;border:1.5px solid var(--bdr);border-radius:8px;padding:8px 10px;font-size:13px;font-family:var(--sans);outline:none;text-align:center;}
+.price-inp:focus{border-color:var(--gold);}
+.btn-apply-filter{width:100%;background:var(--gold);color:#fff;border:none;padding:11px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);margin-top:4px;transition:.3s;}
+.btn-apply-filter:hover{background:var(--gold-d);}
+.btn-clear-filter{width:100%;background:transparent;color:#999;border:1px solid var(--bdr);padding:9px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);margin-top:8px;}
+.btn-clear-filter:hover{border-color:#e74c3c;color:#e74c3c;}
+.gender-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.gender-chip{padding:5px 14px;border:1.5px solid var(--bdr);border-radius:20px;font-size:12px;font-weight:600;color:#555;background:#fff;cursor:pointer;transition:.2s;font-family:var(--sans);}
+.gender-chip:has(input:checked){background:var(--dark);color:#fff;border-color:var(--dark);}
+.gender-chip input{display:none;}
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+<!-- PAGE BANNER -->
+<div class="page-banner" style="background:linear-gradient(135deg,#1a1a2e 0%,#2d2d44 100%);">
+  <div class="container text-center text-white py-5">
+    <h1 class="page-banner-title">Our Perfume Collection</h1>
+    <p class="page-banner-sub">Discover your signature scent from our exclusive fragrance collection</p>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb justify-content-center">
+        <li class="breadcrumb-item"><a href="{% url 'shop:home' %}" class="text-gold">Home</a></li>
+        <li class="breadcrumb-item active text-white-50">Shop</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-4">
+
+    <!-- ── FILTER SIDEBAR ────────────────────────────────── -->
+    <div class="col-lg-3">
+      <div class="filter-sidebar" id="filterSidebar">
+        <div class="filter-head">
+          <h5><i class="fas fa-sliders-h me-2" style="color:var(--gold);"></i>Filters</h5>
+          <a href="{% url 'shop:shop' %}" style="font-size:12px;color:#e74c3c;font-weight:600;">Clear All</a>
+        </div>
+        <form method="get" id="filterForm">
+
+          <!-- Search -->
+          <div class="filter-group">
+            <span class="fg-label">Search</span>
+            <div style="display:flex;border:1.5px solid var(--bdr);border-radius:8px;overflow:hidden;">
+              <input type="text" name="q" placeholder="Search perfumes..." value="{{ search_q }}"
+                style="flex:1;border:none;padding:9px 12px;font-size:13px;font-family:var(--sans);outline:none;background:transparent;">
+              <button type="submit" style="background:var(--gold);border:none;padding:0 14px;color:#fff;cursor:pointer;">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div class="filter-group">
+            <span class="fg-label">Category</span>
+            {% for cat in all_categories %}
+            <div class="f-check-item">
+              <input type="radio" name="category" value="{{ cat.slug }}" id="cat{{ cat.pk }}"
+                {% if current_filters.category == cat.slug %}checked{% endif %}>
+              <label for="cat{{ cat.pk }}">{{ cat.name }}</label>
+              <span class="fc">{{ cat.prod_count }}</span>
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Price -->
+          <div class="filter-group">
+            <span class="fg-label">Price Range (Rs.)</span>
+            <div class="price-inputs">
+              <input type="number" name="price_min" class="price-inp" placeholder="Min" value="{{ current_filters.price_min }}">
+              <span style="color:#ccc;">—</span>
+              <input type="number" name="price_max" class="price-inp" placeholder="Max" value="{{ current_filters.price_max }}">
+            </div>
+          </div>
+
+          <!-- Size -->
+          {% if available_sizes %}
+          <div class="filter-group">
+            <span class="fg-label">Size</span>
+            <div class="size-chips">
+              {% for size in available_sizes %}
+              <label class="size-chip-btn">
+                <input type="checkbox" name="size" value="{{ size }}"
+                  {% if size in current_filters.size %}checked{% endif %}>
+                {{ size }}
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Gender -->
+          <div class="filter-group">
+            <span class="fg-label">Gender</span>
+            <div class="gender-chips">
+              <label class="gender-chip"><input type="checkbox" name="gender" value="men" {% if 'men' in current_filters.gender %}checked{% endif %}>Men</label>
+              <label class="gender-chip"><input type="checkbox" name="gender" value="women" {% if 'women' in current_filters.gender %}checked{% endif %}>Women</label>
+              <label class="gender-chip"><input type="checkbox" name="gender" value="unisex" {% if 'unisex' in current_filters.gender %}checked{% endif %}>Unisex</label>
+            </div>
+          </div>
+
+          <!-- Availability -->
+          <div class="filter-group">
+            <span class="fg-label">Availability</span>
+            <div class="f-check-item">
+              <input type="checkbox" name="in_stock" value="1" id="inStock" {% if current_filters.in_stock %}checked{% endif %}>
+              <label for="inStock">In Stock Only</label>
+            </div>
+          </div>
+
+          <!-- Special Tags -->
+          <div class="filter-group">
+            <span class="fg-label">Special</span>
+            <div class="f-check-item">
+              <input type="checkbox" name="new_arrival" value="1" id="fNew" {% if current_filters.new_arrival %}checked{% endif %}>
+              <label for="fNew">New Arrivals</label>
+            </div>
+            <div class="f-check-item">
+              <input type="checkbox" name="best_seller" value="1" id="fBest" {% if current_filters.best_seller %}checked{% endif %}>
+              <label for="fBest">Best Sellers</label>
+            </div>
+            <div class="f-check-item">
+              <input type="checkbox" name="on_sale" value="1" id="fSale" {% if current_filters.on_sale %}checked{% endif %}>
+              <label for="fSale">On Sale</label>
+            </div>
+            <div class="f-check-item">
+              <input type="checkbox" name="featured" value="1" id="fFeat" {% if current_filters.featured %}checked{% endif %}>
+              <label for="fFeat">Featured</label>
+            </div>
+          </div>
+
+          <div style="padding:16px 20px;">
+            <button type="submit" class="btn-apply-filter"><i class="fas fa-check me-2"></i>Apply Filters</button>
+            <a href="{% url 'shop:shop' %}" class="btn-clear-filter" style="display:block;text-align:center;margin-top:8px;text-decoration:none;padding:9px;border-radius:8px;border:1px solid var(--bdr);color:#999;font-size:12px;font-weight:600;">Clear All Filters</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── PRODUCT GRID ───────────────────────────────────── -->
+    <div class="col-lg-9">
+      <!-- Toolbar -->
+      <div class="shop-toolbar d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+        <p class="results-count mb-0">
+          <strong>{{ total_count }}</strong> Product{{ total_count|pluralize }} Found
+          {% if search_q %}<span class="ms-2 text-muted">for "<em>{{ search_q }}</em>"</span>{% endif %}
+        </p>
+        <div class="d-flex align-items-center gap-2">
+          <label class="me-1 text-muted">Sort:</label>
+          <select class="form-select form-select-sm sort-select" onchange="applySort(this.value)">
+            <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest First</option>
+            <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Oldest First</option>
+            <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+            <option value="top_rated" {% if sort_by == 'top_rated' %}selected{% endif %}>Highest Rated</option>
+            <option value="az" {% if sort_by == 'az' %}selected{% endif %}>A to Z</option>
+          </select>
+          <label class="me-1 text-muted">Show:</label>
+          <select class="form-select form-select-sm perpage-select" onchange="applyPerPage(this.value)">
+            <option value="12" {% if per_page == 12 %}selected{% endif %}>12</option>
+            <option value="24" {% if per_page == 24 %}selected{% endif %}>24</option>
+            <option value="36" {% if per_page == 36 %}selected{% endif %}>36</option>
+            <option value="48" {% if per_page == 48 %}selected{% endif %}>48</option>
+          </select>
+          <!-- Mobile filter toggle -->
+          <button class="mobile-filter-btn d-lg-none" onclick="toggleMobileFilter()">
+            <i class="fas fa-sliders-h"></i> Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Products -->
+      {% if products %}
+      <div class="prods-grid">
+        {% for product in products %}{% include 'partials/product_card.html' %}{% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      {% if products.has_other_pages %}
+      <nav class="mt-5 d-flex justify-content-center" aria-label="Pagination">
+        <ul class="pagination luxury-pagination">
+          {% if products.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?{% for k,v in current_filters.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ products.previous_page_number }}">
+              <i class="fas fa-chevron-left"></i>
+            </a>
+          </li>
+          {% endif %}
+          {% for num in products.paginator.page_range %}
+          <li class="page-item {% if products.number == num %}active{% endif %}">
+            <a class="page-link" href="?{% for k,v in current_filters.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a>
+          </li>
+          {% endfor %}
+          {% if products.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?{% for k,v in current_filters.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ products.next_page_number }}">
+              <i class="fas fa-chevron-right"></i>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+
+      {% else %}
+      <!-- Empty State -->
+      <div class="empty-state text-center py-5">
+        <i class="fas fa-search fa-4x mb-3 text-muted"></i>
+        <h4>No perfumes match your filters</h4>
+        <p class="text-muted">Try adjusting your search or filter criteria.</p>
+        <a href="{% url 'shop:shop' %}" class="btn btn-gold mt-2">Clear All Filters</a>
+      </div>
+      {% endif %}
+    </div>
+
+  </div><!-- .row -->
+</div><!-- .container -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function applySort(val) {
+  const url = new URL(window.location);
+  url.searchParams.set('sort', val);
+  url.searchParams.delete('page');
+  window.location = url;
+}
+function applyPerPage(val) {
+  const url = new URL(window.location);
+  url.searchParams.set('per_page', val);
+  url.searchParams.delete('page');
+  window.location = url;
+}
+function toggleMobileFilter() {
+  document.getElementById('filterSidebar').classList.toggle('filter-open');
+}
+function toggleMobileFilter() {
+  document.getElementById('filterSidebar').classList.toggle('filter-open');
+  document.getElementById('filterOverlay').classList.toggle('show');
+  document.body.style.overflow = document.getElementById('filterSidebar').classList.contains('filter-open') ? 'hidden' : '';
+}
+function closeMobileFilter() {
+  document.getElementById('filterSidebar').classList.remove('filter-open');
+  document.getElementById('filterOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+</script>
+{% endblock %}

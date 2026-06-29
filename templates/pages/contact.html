@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Contact Us – {{ site_name }}{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<div class="page-banner" {% if page.hero_image %}style="background-image:url('{{ page.hero_image.url }}');background-size:cover;background-position:center;"{% endif %}>
+  <div class="page-banner-overlay"></div>
+  <div class="container text-center text-white py-5 position-relative">
+    <h1 class="page-banner-title">{{ page.hero_heading }}</h1>
+    <p class="page-banner-sub">{{ page.hero_subheading }}</p>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-5">
+
+    <!-- Contact Info -->
+    <div class="col-lg-5">
+      <h3 class="contact-section-title">{{ page.intro_heading }}</h3>
+      {% if page.intro_text %}<p class="text-muted mb-4">{{ page.intro_text }}</p>{% endif %}
+
+      <div class="contact-info-cards luxury-contact-card">
+        {% if site.address %}
+        <div class="contact-info-card">
+          <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div>
+            <h6>Store Address</h6>
+            <p>{{ site.address }}{% if site.city %}, {{ site.city }}{% endif %}</p>
+          </div>
+        </div>
+        {% endif %}
+        {% if site.phone_primary %}
+        <div class="contact-info-card">
+          <div class="contact-icon"><i class="fas fa-phone"></i></div>
+          <div>
+            <h6>Phone</h6>
+            <a href="tel:{{ site.phone_primary }}">{{ site.phone_primary }}</a>
+            {% if site.phone_secondary %}<br><a href="tel:{{ site.phone_secondary }}">{{ site.phone_secondary }}</a>{% endif %}
+          </div>
+        </div>
+        {% endif %}
+        {% if site.whatsapp_number %}
+        <div class="contact-info-card">
+          <div class="contact-icon" style="background:#25D366;"><i class="fab fa-whatsapp"></i></div>
+          <div>
+            <h6>WhatsApp</h6>
+            <a href="https://wa.me/{{ site.whatsapp_number }}" target="_blank">Chat on WhatsApp</a>
+          </div>
+        </div>
+        {% endif %}
+        {% if site.email_support %}
+        <div class="contact-info-card">
+          <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+          <div>
+            <h6>Email</h6>
+            <a href="mailto:{{ site.email_support }}">{{ site.email_support }}</a>
+          </div>
+        </div>
+        {% endif %}
+        {% if site.business_hours %}
+        <div class="contact-info-card">
+          <div class="contact-icon"><i class="fas fa-clock"></i></div>
+          <div>
+            <h6>Business Hours</h6>
+            <p>{{ site.business_hours }}</p>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Social -->
+      <div class="mt-4">
+        <h6 class="mb-3">Follow Us</h6>
+        <div class="footer-social">
+          {% if site.facebook_url %}<a href="{{ site.facebook_url }}" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>{% endif %}
+          {% if site.instagram_url %}<a href="{{ site.instagram_url }}" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>{% endif %}
+          {% if site.youtube_url %}<a href="{{ site.youtube_url }}" target="_blank" class="social-icon"><i class="fab fa-youtube"></i></a>{% endif %}
+          {% if site.tiktok_url %}<a href="{{ site.tiktok_url }}" target="_blank" class="social-icon"><i class="fab fa-tiktok"></i></a>{% endif %}
+          {% if site.whatsapp_number %}<a href="https://wa.me/{{ site.whatsapp_number }}" target="_blank" class="social-icon"><i class="fab fa-whatsapp"></i></a>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="col-lg-7">
+      <div class="contact-form-card luxury-form-card">
+        <h4 class="mb-4">Send Us a Message</h4>
+        {% if messages %}
+        {% for msg in messages %}
+        <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+        {% endfor %}
+        {% endif %}
+        <form method="post">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Full Name *</label>
+              {{ form.full_name }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email Address *</label>
+              {{ form.email }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone Number</label>
+              {{ form.phone }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Subject *</label>
+              {% if page.get_subject_list %}
+              <select name="subject" class="form-select">
+                {% for subj in page.get_subject_list %}<option value="{{ subj }}">{{ subj }}</option>{% endfor %}
+              </select>
+              {% else %}
+              {{ form.subject }}
+              {% endif %}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Message *</label>
+              {{ form.message }}
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-gold px-5 btn-lg">
+                <i class="fas fa-paper-plane me-2"></i>Send Message
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQs -->
+  {% if faqs %}
+  <div class="contact-faqs mt-5">
+    <div class="section-header text-center mb-4">
+      <span class="section-label">Got Questions?</span>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="title-divider mx-auto"></div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+        <div class="accordion luxury-accordion" id="contactFaqAccordion">
+          {% for faq in faqs %}
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#cfaq{{ forloop.counter }}">
+                {{ faq.question }}
+              </button>
+            </h2>
+            <div id="cfaq{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#contactFaqAccordion">
+              <div class="accordion-body">{{ faq.answer|linebreaksbr }}</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Map -->
+  {% if site.google_maps_embed %}
+  <div class="contact-map luxury-map mt-5">
+    <div class="section-header text-center mb-4">
+      <span class="section-label">Find Us</span>
+      <h2 class="section-title">Our Location</h2>
+      <div class="title-divider mx-auto"></div>
+    </div>
+    <div class="map-embed rounded-3 overflow-hidden" style="height:400px;">
+      {{ site.google_maps_embed|safe }}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.contact-form-card input, .contact-form-card select, .contact-form-card textarea').forEach(el => {
+  if (!el.classList.contains('form-control') && !el.classList.contains('form-select')) {
+    el.classList.add('form-control');
+  }
+});
+</script>
+{% endblock %}

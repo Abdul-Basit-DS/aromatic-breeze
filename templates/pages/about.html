@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About Us – {{ site_name }}{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<section class="about-hero" style="background-image:url('{% if page.hero_image %}{{ page.hero_image.url }}{% else %}{% static 'images/about-hero.jpg' %}{% endif %}');">
+  <div class="about-hero-overlay" style="background:{{ page.overlay_color }};"></div>
+  <div class="container text-center text-white position-relative py-5">
+    <h1 class="about-hero-title animate__animated animate__fadeInUp">{{ page.hero_heading }}</h1>
+    {% if page.hero_subheading %}<p class="about-hero-sub animate__animated animate__fadeInUp animate__delay-1s">{{ page.hero_subheading }}</p>{% endif %}
+    <div class="mt-4">
+      {% if page.hero_btn1_text %}<a href="{{ page.hero_btn1_url }}" class="btn btn-gold btn-lg me-3">{{ page.hero_btn1_text }}</a>{% endif %}
+      {% if page.hero_btn2_text %}<a href="{{ page.hero_btn2_url }}" class="btn btn-outline-light btn-lg">{{ page.hero_btn2_text }}</a>{% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+{% if page.story_content %}
+<section class="about-story py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <span class="section-label">Our Journey</span>
+        <h2 class="section-title">{{ page.story_heading }}</h2>
+        <div class="title-divider mx-auto mb-4"></div>
+        <div class="story-content">{{ page.story_content|safe }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- STATISTICS -->
+{% if stats %}
+<section class="stats-section py-5 section-bg-dark">
+  <div class="container">
+    <div class="row g-4 text-center text-white">
+      {% for stat in stats %}
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          {% if stat.icon %}<i class="{{ stat.icon }} fa-2x mb-2 text-gold"></i>{% endif %}
+          <div class="stat-number-large" data-counter="{{ stat.value }}" data-suffix="{{ stat.suffix }}">0{{ stat.suffix }}</div>
+          <div class="stat-label-text">{{ stat.label }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- FOUNDER MESSAGE -->
+{% if page.founder_name %}
+<section class="founder-section py-5">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-5 text-center">
+        {% if page.founder_image %}
+        <div class="founder-img-wrap"><img src="{{ page.founder_image.url }}" alt="{{ page.founder_name }}" class="founder-img"></div>
+        {% endif %}
+        {% if page.founder_signature %}<img src="{{ page.founder_signature.url }}" alt="Signature" class="founder-signature mt-3">{% endif %}
+      </div>
+      <div class="col-lg-7">
+        <span class="section-label">A Message From</span>
+        <h2 class="section-title">{{ page.founder_name }}</h2>
+        <p class="text-muted mb-3">{{ page.founder_designation }}</p>
+        <div class="founder-message">{{ page.founder_message|safe }}</div>
+        {% if page.founder_quote %}
+        <blockquote class="founder-quote mt-3">"{{ page.founder_quote }}"</blockquote>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- BRAND VALUES -->
+{% if values %}
+<section class="values-section py-5 section-bg-light">
+  <div class="container">
+    <div class="section-header text-center mb-4">
+      <span class="section-label">What We Stand For</span>
+      <h2 class="section-title">Our Brand Values</h2>
+      <div class="title-divider mx-auto"></div>
+    </div>
+    <div class="row g-4">
+      {% for val in values %}
+      <div class="col-md-4 col-lg-3">
+        <div class="value-card text-center">
+          <div class="value-icon"><i class="{{ val.icon }}"></i></div>
+          <h6 class="value-title">{{ val.title }}</h6>
+          <p class="value-desc">{{ val.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- WHY CHOOSE US -->
+{% if why_us %}
+<section class="why-us-section py-5">
+  <div class="container">
+    <div class="section-header text-center mb-4">
+      <span class="section-label">Our Advantages</span>
+      <h2 class="section-title">Why Choose The Aromatic Breeze?</h2>
+      <div class="title-divider mx-auto"></div>
+    </div>
+    <div class="row g-4">
+      {% for item in why_us %}
+      <div class="col-md-6 col-lg-4">
+        <div class="why-card d-flex gap-3">
+          <div class="why-icon"><i class="{{ item.icon }}"></i></div>
+          <div><h6 class="why-title">{{ item.title }}</h6><p class="why-desc mb-0">{{ item.description }}</p></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- MANUFACTURING PROCESS -->
+{% if process %}
+<section class="process-section py-5 section-bg-light">
+  <div class="container">
+    <div class="section-header text-center mb-4">
+      <span class="section-label">How We Create</span>
+      <h2 class="section-title">Our Crafting Process</h2>
+      <div class="title-divider mx-auto"></div>
+    </div>
+    <div class="process-timeline">
+      {% for step in process %}
+      <div class="process-step">
+        <div class="process-num">{{ forloop.counter }}</div>
+        <div class="process-body">
+          <div class="process-icon"><i class="{{ step.icon }}"></i></div>
+          <h6 class="process-title">{{ step.title }}</h6>
+          <p class="process-desc">{{ step.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- TIMELINE -->
+{% if timeline %}
+<section class="timeline-section py-5">
+  <div class="container">
+    <div class="section-header text-center mb-4">
+      <span class="section-label">Our History</span>
+      <h2 class="section-title">Brand Timeline</h2>
+      <div class="title-divider mx-auto"></div>
+    </div>
+    <div class="brand-timeline">
+      {% for item in timeline %}
+      <div class="timeline-item {% if forloop.counter|divisibleby:2 %}right{% else %}left{% endif %}">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-year">{{ item.year }}</span>
+          <h6 class="timeline-title">{{ item.title }}</h6>
+          {% if item.description %}<p class="timeline-desc">{{ item.description }}</p>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- TESTIMONIALS -->
+{% if testimonials %}
+<section class="testimonials-section py-5 section-bg-dark">
+  <div class="container">
+    <div class="section-header text-center mb-4">
+      <span class="section-label gold-label">What Customers Say</span>
+      <h2 class="section-title text-white">Customer Testimonials</h2>
+      <div class="title-divider mx-auto"></div>
+    </div>
+    <div class="swiper reviews-swiper">
+      <div class="swiper-wrapper">
+        {% for r in testimonials %}
+        <div class="swiper-slide">
+          <div class="review-card">
+            <div class="review-stars">{% for i in "12345" %}{% if forloop.counter <= r.rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}{% endfor %}</div>
+            <p class="review-body">"{{ r.body|truncatewords:30 }}"</p>
+            <span class="reviewer-name">— {{ r.customer_name }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="swiper-button-next reviews-next"></div>
+      <div class="swiper-button-prev reviews-prev"></div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="cta-section py-5" style="{% if page.cta_bg_image %}background-image:url('{{ page.cta_bg_image.url }}');background-size:cover;background-position:center;{% else %}background:var(--dark);{% endif %}">
+  <div class="cta-overlay"></div>
+  <div class="container text-center text-white position-relative">
+    <h2 class="cta-title">{{ page.cta_heading }}</h2>
+    {% if page.cta_description %}<p class="cta-desc">{{ page.cta_description }}</p>{% endif %}
+    <div class="mt-4">
+      {% if page.cta_btn1_text %}<a href="{{ page.cta_btn1_url }}" class="btn btn-gold btn-lg me-3">{{ page.cta_btn1_text }}</a>{% endif %}
+      {% if page.cta_btn2_text %}<a href="{{ page.cta_btn2_url }}" class="btn btn-outline-light btn-lg">{{ page.cta_btn2_text }}</a>{% endif %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

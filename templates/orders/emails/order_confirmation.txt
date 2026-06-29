@@ -1,0 +1,40 @@
+Assalam-o-Alaikum {{ order.customer_name }},
+
+Thank you for your order! 🎉
+
+Order Details:
+──────────────────────────────
+Order Number : #{{ order.order_number }}
+Order Date   : {{ order.created_at|date:"d M Y, h:i A" }}
+Payment      : {{ order.get_payment_method_display }}
+Status       : {{ order.get_status_display }}
+
+Items Ordered:
+──────────────────────────────
+{% for item in order.items.all %}• {{ item.product_name }}{% if item.variation_name %} ({{ item.variation_name }}){% endif %} × {{ item.quantity }}  —  Rs. {{ item.total_price|floatformat:0 }}
+{% endfor %}
+──────────────────────────────
+Subtotal     : Rs. {{ order.subtotal|floatformat:0 }}
+{% if order.coupon_discount %}Coupon       : - Rs. {{ order.coupon_discount|floatformat:0 }}
+{% endif %}Shipping     : Rs. {{ order.shipping_charge|floatformat:0 }}
+{% if order.cod_charge %}COD Charge   : Rs. {{ order.cod_charge|floatformat:0 }}
+{% endif %}GRAND TOTAL  : Rs. {{ order.grand_total|floatformat:0 }}
+
+Shipping Address:
+──────────────────────────────
+{{ order.shipping_full_name }}
+{{ order.shipping_address_line1 }}{% if order.shipping_address_line2 %}, {{ order.shipping_address_line2 }}{% endif %}
+{{ order.shipping_city }}, {{ order.shipping_province }}
+{{ order.shipping_country }}
+Phone: {{ order.shipping_phone }}
+
+We will notify you once your order is shipped.
+
+Track your order: https://aromaticbreeze.com/orders/track/{{ order.order_number }}/
+
+Thank you for choosing The Aromatic Breeze! 🌸
+
+Best Regards,
+The Aromatic Breeze Team
+📞 +92-XXX-XXXXXXX
+📧 support@aromaticbreeze.com

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Invoice #{{ order.order_number }}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; font-size: 13px; color: #333; }
+  .invoice-wrap { max-width: 750px; margin: 0 auto; padding: 30px; }
+  .invoice-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #d4af37; padding-bottom: 20px; margin-bottom: 24px; }
+  .brand-name { font-size: 22px; font-weight: 700; color: #1a1a2e; letter-spacing: 1px; }
+  .brand-tagline { font-size: 11px; color: #888; margin-top: 2px; }
+  .invoice-label { font-size: 24px; font-weight: 700; color: #d4af37; }
+  .invoice-number { font-size: 13px; color: #666; margin-top: 4px; }
+  .invoice-date { font-size: 12px; color: #666; }
+  .info-grid { display: flex; gap: 30px; margin-bottom: 24px; }
+  .info-box { flex: 1; }
+  .info-box h6 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #d4af37; margin-bottom: 6px; font-weight: 700; }
+  .info-box p { font-size: 13px; line-height: 1.6; color: #444; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  thead tr { background: #1a1a2e; color: white; }
+  thead th { padding: 10px 12px; text-align: left; font-size: 12px; letter-spacing: 0.5px; }
+  tbody tr { border-bottom: 1px solid #e8e0d0; }
+  tbody tr:nth-child(even) { background: #fdfaf4; }
+  tbody td { padding: 10px 12px; font-size: 13px; }
+  .text-right { text-align: right; }
+  .totals-table { width: 300px; margin-left: auto; }
+  .totals-table td { padding: 6px 10px; font-size: 13px; }
+  .totals-table .grand-row { background: #1a1a2e; color: white; font-weight: 700; }
+  .totals-table .grand-row td { padding: 10px; }
+  .gold-text { color: #d4af37; }
+  .invoice-footer { margin-top: 30px; padding-top: 16px; border-top: 1px solid #e8e0d0; text-align: center; font-size: 11px; color: #888; }
+  .status-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+  .status-delivered { background: #d4edda; color: #155724; }
+  .status-pending { background: #fff3cd; color: #856404; }
+  .status-shipped { background: #d1ecf1; color: #0c5460; }
+</style>
+</head>
+<body>
+<div class="invoice-wrap">
+
+  <!-- Header -->
+  <div class="invoice-header">
+    <div>
+      <div class="brand-name">The Aromatic Breeze</div>
+      <div class="brand-tagline">Premium Perfumes</div>
+    </div>
+    <div class="text-right">
+      <div class="invoice-label">INVOICE</div>
+      <div class="invoice-number">#{{ order.order_number }}</div>
+      <div class="invoice-date">Date: {{ order.created_at|date:"d M Y" }}</div>
+      <div class="mt-1">
+        <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Grid -->
+  <div class="info-grid">
+    <div class="info-box">
+      <h6>From</h6>
+      <p><strong>The Aromatic Breeze</strong><br>
+      Pakistan<br>
+      support@aromaticbreeze.com</p>
+    </div>
+    <div class="info-box">
+      <h6>Bill To</h6>
+      <p><strong>{{ order.customer_name }}</strong><br>
+      {{ order.customer_email }}<br>
+      {{ order.customer_phone }}</p>
+    </div>
+    <div class="info-box">
+      <h6>Ship To</h6>
+      <p>{{ order.shipping_full_name }}<br>
+      {{ order.shipping_address_line1 }}{% if order.shipping_address_line2 %}, {{ order.shipping_address_line2 }}{% endif %}<br>
+      {{ order.shipping_city }}, {{ order.shipping_province }}<br>
+      {{ order.shipping_phone }}</p>
+    </div>
+    <div class="info-box">
+      <h6>Payment</h6>
+      <p>{{ order.get_payment_method_display }}<br>
+      <strong>Status:</strong> {{ order.get_payment_status_display }}<br>
+      {% if order.tracking_number %}<strong>Tracking:</strong> {{ order.tracking_number }}{% endif %}</p>
+    </div>
+  </div>
+
+  <!-- Items Table -->
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Product</th>
+        <th>Size / Variation</th>
+        <th>SKU</th>
+        <th>Qty</th>
+        <th class="text-right">Unit Price</th>
+        <th class="text-right">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in order.items.all %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td><strong>{{ item.product_name }}</strong></td>
+        <td>{{ item.variation_name|default:"—" }}</td>
+        <td style="color:#888;font-size:11px;">{{ item.sku|default:"—" }}</td>
+        <td>{{ item.quantity }}</td>
+        <td class="text-right">Rs. {{ item.unit_price|floatformat:0 }}</td>
+        <td class="text-right"><strong>Rs. {{ item.total_price|floatformat:0 }}</strong></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Totals -->
+  <table class="totals-table">
+    <tbody>
+      <tr>
+        <td>Subtotal</td>
+        <td class="text-right">Rs. {{ order.subtotal|floatformat:0 }}</td>
+      </tr>
+      {% if order.coupon_discount %}
+      <tr>
+        <td class="gold-text">Coupon ({{ order.coupon_code }})</td>
+        <td class="text-right gold-text">- Rs. {{ order.coupon_discount|floatformat:0 }}</td>
+      </tr>
+      {% endif %}
+      {% if order.discount_amount %}
+      <tr>
+        <td>Discount</td>
+        <td class="text-right">- Rs. {{ order.discount_amount|floatformat:0 }}</td>
+      </tr>
+      {% endif %}
+      <tr>
+        <td>Shipping ({{ order.get_shipping_type_display }})</td>
+        <td class="text-right">Rs. {{ order.shipping_charge|floatformat:0 }}</td>
+      </tr>
+      {% if order.cod_charge %}
+      <tr>
+        <td>COD Charge</td>
+        <td class="text-right">Rs. {{ order.cod_charge|floatformat:0 }}</td>
+      </tr>
+      {% endif %}
+      {% if order.tax_amount %}
+      <tr>
+        <td>Tax</td>
+        <td class="text-right">Rs. {{ order.tax_amount|floatformat:0 }}</td>
+      </tr>
+      {% endif %}
+      <tr class="grand-row">
+        <td>GRAND TOTAL</td>
+        <td class="text-right" style="color:#d4af37;">Rs. {{ order.grand_total|floatformat:0 }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Notes -->
+  {% if order.customer_notes %}
+  <div style="margin-top:20px;padding:12px;background:#fdfaf4;border-left:3px solid #d4af37;border-radius:0 6px 6px 0;">
+    <strong>Customer Notes:</strong><br>
+    <span style="color:#555;">{{ order.customer_notes }}</span>
+  </div>
+  {% endif %}
+
+  <!-- Footer -->
+  <div class="invoice-footer">
+    <p><strong>Thank you for shopping with The Aromatic Breeze!</strong></p>
+    <p>For queries: support@aromaticbreeze.com | www.aromaticbreeze.com</p>
+    <p style="margin-top:6px;">This is a computer-generated invoice. No signature required.</p>
+  </div>
+
+</div>
+</body>
+</html>

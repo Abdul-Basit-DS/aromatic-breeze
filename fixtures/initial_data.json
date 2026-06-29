@@ -1,0 +1,271 @@
+[
+  {
+    "model": "sites.site",
+    "pk": 1,
+    "fields": {
+      "domain": "aromaticbreeze.com",
+      "name": "The Aromatic Breeze"
+    }
+  },
+  {
+    "model": "pages.sitesettings",
+    "pk": 1,
+    "fields": {
+      "site_name": "The Aromatic Breeze",
+      "site_tagline": "Premium Perfumes",
+      "announcement_text": "Free Delivery on Orders Above Rs. 2,500 | Use Code WELCOME10 for 10% OFF",
+      "announcement_is_active": true,
+      "announcement_bg_color": "#1a1a2e",
+      "announcement_text_color": "#d4af37",
+      "address": "Shop No. 12, Perfume Market, Main Boulevard",
+      "city": "Lahore",
+      "phone_primary": "+92-300-0000000",
+      "whatsapp_number": "923000000000",
+      "email_support": "support@aromaticbreeze.com",
+      "business_hours": "Mon–Sat: 10am – 7pm",
+      "facebook_url": "https://facebook.com/aromaticbreeze",
+      "instagram_url": "https://instagram.com/aromaticbreeze",
+      "currency_code": "PKR",
+      "currency_symbol": "Rs.",
+      "free_shipping_threshold": "2500.00",
+      "default_meta_title": "The Aromatic Breeze – Premium Perfumes in Pakistan",
+      "default_meta_description": "Discover premium perfumes inspired by top international fragrances. Shop Men, Women and Unisex perfumes with free delivery above Rs. 2500.",
+      "maintenance_mode": false,
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "shop.trustfeature",
+    "pk": 1,
+    "fields": { "icon": "fas fa-truck", "title": "Free Delivery", "description": "Free shipping on orders above Rs. 2,500", "display_order": 1, "is_active": true }
+  },
+  {
+    "model": "shop.trustfeature",
+    "pk": 2,
+    "fields": { "icon": "fas fa-award", "title": "Long Lasting Fragrance", "description": "Premium quality perfumes that last 8–12 hours", "display_order": 2, "is_active": true }
+  },
+  {
+    "model": "shop.trustfeature",
+    "pk": 3,
+    "fields": { "icon": "fas fa-flask", "title": "Premium Imported Oils", "description": "Made with finest imported fragrance oils", "display_order": 3, "is_active": true }
+  },
+  {
+    "model": "shop.trustfeature",
+    "pk": 4,
+    "fields": { "icon": "fas fa-shield-alt", "title": "Secure Payment", "description": "100% secure and safe checkout process", "display_order": 4, "is_active": true }
+  },
+  {
+    "model": "shop.fragrancefamily",
+    "pk": 1,
+    "fields": { "name": "Fresh", "slug": "fresh", "display_order": 1, "is_active": true }
+  },
+  {
+    "model": "shop.fragrancefamily",
+    "pk": 2,
+    "fields": { "name": "Woody", "slug": "woody", "display_order": 2, "is_active": true }
+  },
+  {
+    "model": "shop.fragrancefamily",
+    "pk": 3,
+    "fields": { "name": "Floral", "slug": "floral", "display_order": 3, "is_active": true }
+  },
+  {
+    "model": "shop.fragrancefamily",
+    "pk": 4,
+    "fields": { "name": "Oriental / Oud", "slug": "oriental-oud", "display_order": 4, "is_active": true }
+  },
+  {
+    "model": "shop.fragrancefamily",
+    "pk": 5,
+    "fields": { "name": "Citrus", "slug": "citrus", "display_order": 5, "is_active": true }
+  },
+  {
+    "model": "shop.fragrancefamily",
+    "pk": 6,
+    "fields": { "name": "Aquatic", "slug": "aquatic", "display_order": 6, "is_active": true }
+  },
+  {
+    "model": "shop.fragrancefamily",
+    "pk": 7,
+    "fields": { "name": "Musky", "slug": "musky", "display_order": 7, "is_active": true }
+  },
+  {
+    "model": "shop.fragrancefamily",
+    "pk": 8,
+    "fields": { "name": "Vanilla / Sweet", "slug": "vanilla-sweet", "display_order": 8, "is_active": true }
+  },
+  {
+    "model": "orders.shippingzone",
+    "pk": 1,
+    "fields": {
+      "name": "Lahore",
+      "cities": "Lahore, Sheikhupura, Kasur, Gujranwala",
+      "standard_charge": "150.00",
+      "express_charge": "300.00",
+      "cod_charge": "50.00",
+      "free_shipping_threshold": "2500.00",
+      "standard_days": "1-2 Days",
+      "express_days": "Same Day",
+      "is_active": true
+    }
+  },
+  {
+    "model": "orders.shippingzone",
+    "pk": 2,
+    "fields": {
+      "name": "Karachi",
+      "cities": "Karachi, Hyderabad",
+      "standard_charge": "200.00",
+      "express_charge": "400.00",
+      "cod_charge": "50.00",
+      "free_shipping_threshold": "2500.00",
+      "standard_days": "2-3 Days",
+      "express_days": "1-2 Days",
+      "is_active": true
+    }
+  },
+  {
+    "model": "orders.shippingzone",
+    "pk": 3,
+    "fields": {
+      "name": "Rest of Pakistan",
+      "cities": "Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta, Sialkot, Sargodha, Bahawalpur",
+      "standard_charge": "200.00",
+      "express_charge": "400.00",
+      "cod_charge": "50.00",
+      "free_shipping_threshold": "2500.00",
+      "standard_days": "3-5 Days",
+      "express_days": "1-2 Days",
+      "is_active": true
+    }
+  },
+  {
+    "model": "coupons.coupon",
+    "pk": 1,
+    "fields": {
+      "code": "WELCOME10",
+      "description": "10% off for new customers",
+      "discount_type": "percentage",
+      "discount_value": "10.00",
+      "max_discount_amount": "500.00",
+      "minimum_purchase": "1000.00",
+      "usage_limit": 1000,
+      "usage_limit_per_user": 1,
+      "times_used": 0,
+      "is_active": true,
+      "valid_from": "2024-01-01T00:00:00Z",
+      "valid_to": null,
+      "first_order_only": true,
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "coupons.coupon",
+    "pk": 2,
+    "fields": {
+      "code": "FREESHIP",
+      "description": "Free shipping coupon",
+      "discount_type": "free_shipping",
+      "discount_value": "0.00",
+      "minimum_purchase": "1500.00",
+      "usage_limit": null,
+      "usage_limit_per_user": 3,
+      "times_used": 0,
+      "is_active": true,
+      "valid_from": "2024-01-01T00:00:00Z",
+      "valid_to": null,
+      "first_order_only": false,
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "blog.blogcategory",
+    "pk": 1,
+    "fields": { "name": "Buying Guides", "slug": "buying-guides", "display_order": 1, "is_active": true }
+  },
+  {
+    "model": "blog.blogcategory",
+    "pk": 2,
+    "fields": { "name": "Fragrance Education", "slug": "fragrance-education", "display_order": 2, "is_active": true }
+  },
+  {
+    "model": "blog.blogcategory",
+    "pk": 3,
+    "fields": { "name": "Men's Perfumes", "slug": "mens-perfumes", "display_order": 3, "is_active": true }
+  },
+  {
+    "model": "blog.blogcategory",
+    "pk": 4,
+    "fields": { "name": "Women's Perfumes", "slug": "womens-perfumes", "display_order": 4, "is_active": true }
+  },
+  {
+    "model": "blog.blogcategory",
+    "pk": 5,
+    "fields": { "name": "Tips & Tricks", "slug": "tips-tricks", "display_order": 5, "is_active": true }
+  },
+  {
+    "model": "blog.blogtag",
+    "pk": 1,
+    "fields": { "name": "Best Seller Perfumes", "slug": "best-seller-perfumes", "display_order": 1, "is_active": true }
+  },
+  {
+    "model": "blog.blogtag",
+    "pk": 2,
+    "fields": { "name": "Oud Perfumes", "slug": "oud-perfumes", "display_order": 2, "is_active": true }
+  },
+  {
+    "model": "blog.blogtag",
+    "pk": 3,
+    "fields": { "name": "Summer Fragrances", "slug": "summer-fragrances", "display_order": 3, "is_active": true }
+  },
+  {
+    "model": "blog.blogtag",
+    "pk": 4,
+    "fields": { "name": "Gift Ideas", "slug": "gift-ideas", "display_order": 4, "is_active": true }
+  },
+  {
+    "model": "blog.blogtag",
+    "pk": 5,
+    "fields": { "name": "Luxury Perfumes", "slug": "luxury-perfumes", "display_order": 5, "is_active": true }
+  },
+  {
+    "model": "blog.faq",
+    "pk": 1,
+    "fields": { "page": "contact", "question": "How long does delivery take?", "answer": "Standard delivery takes 3-5 business days. Express delivery is available in 1-2 business days.", "display_order": 1, "is_active": true }
+  },
+  {
+    "model": "blog.faq",
+    "pk": 2,
+    "fields": { "page": "contact", "question": "Do you offer Cash on Delivery?", "answer": "Yes! We offer Cash on Delivery (COD) all across Pakistan. A small COD charge may apply.", "display_order": 2, "is_active": true }
+  },
+  {
+    "model": "blog.faq",
+    "pk": 3,
+    "fields": { "page": "contact", "question": "What is your return policy?", "answer": "We offer a 7-day easy return policy. Items must be unused and in original packaging. Contact us to initiate a return.", "display_order": 3, "is_active": true }
+  },
+  {
+    "model": "blog.faq",
+    "pk": 4,
+    "fields": { "page": "contact", "question": "Are your perfumes original?", "answer": "All our perfumes are made with premium imported fragrance oils inspired by top international brands. They are not original branded bottles but high-quality alternatives.", "display_order": 4, "is_active": true }
+  },
+  {
+    "model": "pages.statistic",
+    "pk": 1,
+    "fields": { "icon": "fas fa-users", "label": "Happy Customers", "value": 5000, "suffix": "+", "display_order": 1, "is_active": true }
+  },
+  {
+    "model": "pages.statistic",
+    "pk": 2,
+    "fields": { "icon": "fas fa-spray-can-sparkles", "label": "Perfumes Available", "value": 200, "suffix": "+", "display_order": 2, "is_active": true }
+  },
+  {
+    "model": "pages.statistic",
+    "pk": 3,
+    "fields": { "icon": "fas fa-box", "label": "Orders Delivered", "value": 12000, "suffix": "+", "display_order": 3, "is_active": true }
+  },
+  {
+    "model": "pages.statistic",
+    "pk": 4,
+    "fields": { "icon": "fas fa-star", "label": "Customer Satisfaction", "value": 98, "suffix": "%", "display_order": 4, "is_active": true }
+  }
+]

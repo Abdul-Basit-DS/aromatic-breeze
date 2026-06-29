@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% block title %}Order #{{ order.order_number }} – {{ site_name }}{% endblock %}
+{% block newsletter %}{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row g-4">
+    <div class="col-lg-3 dash-sidebar-col">{% include 'accounts/partials/sidebar.html' %}</div>
+    <div class="col-lg-9 dash-content-col">
+
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <h4 style="font-family:var(--serif);margin:0;">Order #{{ order.order_number }}</h4>
+        <div class="d-flex gap-2">
+          <a href="{% url 'orders:invoice_pdf' order.order_number %}" target="_blank"
+            style="font-size:13px;font-weight:600;color:var(--gold);border:1px solid var(--gold);padding:7px 16px;border-radius:20px;">
+            <i class="fas fa-file-pdf me-1"></i> Invoice
+          </a>
+          <a href="{% url 'accounts:my_orders' %}"
+            style="font-size:13px;font-weight:600;color:#666;border:1px solid var(--bdr);padding:7px 16px;border-radius:20px;">
+            <i class="fas fa-arrow-left me-1"></i> Back
+          </a>
+        </div>
+      </div>
+
+      <!-- Order Status -->
+      <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:20px;margin-bottom:20px;">
+        <div class="row g-3">
+          <div class="col-6 col-md-3 text-center">
+            <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Order #</div>
+            <div style="font-weight:700;color:var(--dark);">{{ order.order_number }}</div>
+          </div>
+          <div class="col-6 col-md-3 text-center">
+            <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Date</div>
+            <div style="font-weight:700;color:var(--dark);">{{ order.created_at|date:"d M Y" }}</div>
+          </div>
+          <div class="col-6 col-md-3 text-center">
+            <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Payment</div>
+            <div style="font-weight:700;color:var(--dark);">{{ order.get_payment_method_display }}</div>
+          </div>
+          <div class="col-6 col-md-3 text-center">
+            <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Status</div>
+            <span class="ord-status s-{{ order.status }}">{{ order.get_status_display }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items -->
+      <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;overflow:hidden;margin-bottom:20px;">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--bdr);font-family:var(--serif);font-size:16px;font-weight:700;">
+          Items Ordered
+        </div>
+        {% for item in order.items.all %}
+        <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid #f5f0e8;">
+          {% with item.product.get_primary_image as img %}
+          {% if img %}
+          <img src="{{ img.image.url }}" alt="{{ item.product_name }}"
+            style="width:65px;height:65px;object-fit:cover;border-radius:8px;border:1px solid var(--bdr);flex-shrink:0;">
+          {% endif %}
+          {% endwith %}
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:14px;color:var(--dark);">{{ item.product_name }}</div>
+            {% if item.variation_name %}
+            <div style="font-size:12px;color:#999;">Size: {{ item.variation_name }}</div>
+            {% endif %}
+            <div style="font-size:12px;color:#999;">Qty: {{ item.quantity }} × Rs. {{ item.unit_price|floatformat:0 }}</div>
+          </div>
+          <div style="font-weight:700;font-size:15px;color:var(--dark);">
+            Rs. {{ item.total_price|floatformat:0 }}
+          </div>
+        </div>
+        {% endfor %}
+
+        <!-- Totals -->
+        <div style="padding:16px 20px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:8px;">
+            <span>Subtotal</span><span>Rs. {{ order.subtotal|floatformat:0 }}</span>
+          </div>
+          {% if order.coupon_discount %}
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#27ae60;margin-bottom:8px;">
+            <span>Discount ({{ order.coupon_code }})</span>
+            <span>- Rs. {{ order.coupon_discount|floatformat:0 }}</span>
+          </div>
+          {% endif %}
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:8px;">
+            <span>Shipping</span>
+            <span>{% if order.shipping_charge == 0 %}Free{% else %}Rs. {{ order.shipping_charge|floatformat:0 }}{% endif %}</span>
+          </div>
+          {% if order.cod_charge %}
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:8px;">
+            <span>COD Charge</span><span>Rs. {{ order.cod_charge|floatformat:0 }}</span>
+          </div>
+          {% endif %}
+          <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding-top:12px;border-top:2px solid var(--bdr);">
+            <span>Grand Total</span>
+            <span style="color:var(--gold);">Rs. {{ order.grand_total|floatformat:0 }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping + Payment Info -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:20px;height:100%;">
+            <h6 style="font-family:var(--serif);font-size:15px;margin-bottom:14px;color:var(--dark);">
+              <i class="fas fa-map-marker-alt me-2" style="color:var(--gold);"></i>Delivery Address
+            </h6>
+            <p style="font-size:13px;color:#555;line-height:1.8;margin:0;">
+              <strong>{{ order.shipping_full_name }}</strong><br>
+              {{ order.shipping_address_line1 }}
+              {% if order.shipping_address_line2 %}, {{ order.shipping_address_line2 }}{% endif %}<br>
+              {{ order.shipping_city }}, {{ order.shipping_province }}<br>
+              Phone: {{ order.shipping_phone }}
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:20px;height:100%;">
+            <h6 style="font-family:var(--serif);font-size:15px;margin-bottom:14px;color:var(--dark);">
+              <i class="fas fa-credit-card me-2" style="color:var(--gold);"></i>Payment Info
+            </h6>
+            <div style="font-size:13px;color:#555;line-height:2;">
+              <div><strong>Method:</strong> {{ order.get_payment_method_display }}</div>
+              <div><strong>Status:</strong>
+                <span style="color:{% if order.payment_status == 'paid' %}#27ae60{% else %}#e74c3c{% endif %};">
+                  {{ order.get_payment_status_display }}
+                </span>
+              </div>
+              <div><strong>Shipping:</strong> {{ order.get_shipping_type_display }}</div>
+              {% if order.tracking_number %}
+              <div><strong>Tracking:</strong> {{ order.tracking_number }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Timeline -->
+      {% if order.status_history.all %}
+      <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:20px;margin-bottom:20px;">
+        <h6 style="font-family:var(--serif);font-size:15px;margin-bottom:16px;color:var(--dark);">
+          <i class="fas fa-history me-2" style="color:var(--gold);"></i>Order Timeline
+        </h6>
+        {% for h in order.status_history.all %}
+        <div style="display:flex;gap:12px;margin-bottom:14px;">
+          <div style="width:10px;height:10px;background:var(--gold);border-radius:50%;margin-top:5px;flex-shrink:0;"></div>
+          <div>
+            <div style="font-weight:700;font-size:13px;color:var(--dark);">{{ h.new_status|title }}</div>
+            <div style="font-size:12px;color:#999;">
+              {{ h.created_at|date:"d M Y, h:i A" }}
+              {% if h.note %} — {{ h.note }}{% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Customer Notes -->
+      {% if order.customer_notes %}
+      <div style="background:#fffdf5;border:1px solid var(--bdr);border-left:4px solid var(--gold);border-radius:0 12px 12px 0;padding:16px 20px;">
+        <h6 style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:6px;">Order Notes</h6>
+        <p style="font-size:13px;color:#555;margin:0;">{{ order.customer_notes }}</p>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

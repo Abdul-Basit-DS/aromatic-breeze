@@ -1,0 +1,177 @@
+{% load static %}
+
+<div class="product-card">
+
+    <!-- Badges -->
+    <div class="p-badges">
+        {% if product.is_on_sale %}
+            <span class="pbadge pbadge-sale">Sale</span>
+        {% endif %}
+
+        {% if product.is_new_arrival %}
+            <span class="pbadge pbadge-new">New</span>
+        {% endif %}
+
+        {% if product.is_best_seller %}
+            <span class="pbadge pbadge-best">Best Seller</span>
+        {% endif %}
+    </div>
+
+    <!-- Wishlist -->
+    <button class="p-wishlist"
+            onclick="toggleWishlist('{{ product.id }}',this)">
+
+        <i class="far fa-heart"></i>
+
+    </button>
+
+    <!-- Product Image -->
+    <div class="p-img">
+
+        <a href="{{ product.get_absolute_url }}" class="p-img-link">
+
+            {% with product.get_primary_image as img %}
+
+                {% if img %}
+
+                    <img
+                        src="{{ img.image.url }}"
+                        alt="{{ product.name }}"
+                        loading="lazy"
+                        class="product-image">
+
+                {% else %}
+
+                    <div class="no-image">
+                        <i class="fas fa-spray-can fa-3x"></i>
+                    </div>
+
+                {% endif %}
+
+            {% endwith %}
+
+        </a>
+
+        <button class="p-qv"
+                onclick="openQV('{{ product.slug }}')">
+
+            <i class="fas fa-eye"></i>
+            Quick View
+
+        </button>
+
+    </div>
+
+    <!-- Product Info -->
+    <div class="p-info">
+
+        {% if product.inspired_by %}
+        <p class="p-inspired">
+            Inspired by
+            <strong>{{ product.inspired_by }}</strong>
+        </p>
+        {% endif %}
+
+        <h3 class="p-name">
+            <a href="{{ product.get_absolute_url }}">
+                {{ product.name }}
+            </a>
+        </h3>
+
+        <div class="p-stars">
+
+            <div class="stars">
+
+                {% with product.get_average_rating as r %}
+
+                    {% for i in "12345" %}
+
+                        {% if forloop.counter <= r %}
+                            <i class="fas fa-star"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% endwith %}
+
+            </div>
+
+            <span class="rc">
+
+                ({{ product.get_review_count }})
+
+            </span>
+
+        </div>
+
+        {% if product.variations.all %}
+
+        <div class="p-sizes">
+
+            {% for v in product.variations.all|slice:":4" %}
+
+                <span class="sz-chip">
+
+                    {{ v.name }}
+
+                </span>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+        <div class="p-price">
+
+            {% if product.is_on_sale %}
+
+                <div class="price-row">
+
+                    <span class="price-now">
+
+                        Rs. {{ product.sale_price|floatformat:0 }}
+
+                    </span>
+
+                    <span class="price-was">
+
+                        Rs. {{ product.regular_price|floatformat:0 }}
+
+                    </span>
+
+                </div>
+
+                <span class="price-off">
+
+                    {{ product.discount_percentage }}% OFF
+
+                </span>
+
+            {% else %}
+
+                <span class="price-now">
+
+                    Rs. {{ product.regular_price|floatformat:0 }}
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        <button
+            class="btn-atc"
+            onclick="addToCart('{{ product.id }}',null,1,this)">
+
+            <i class="fas fa-shopping-bag"></i>
+
+            Add To Cart
+
+        </button>
+
+    </div>
+
+</div>

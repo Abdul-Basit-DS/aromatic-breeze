@@ -1,0 +1,16 @@
+New Order Received!
+
+Order Number : #{{ order.order_number }}
+Date         : {{ order.created_at|date:"d M Y, h:i A" }}
+Customer     : {{ order.customer_name }}
+Email        : {{ order.customer_email }}
+Phone        : {{ order.customer_phone }}
+City         : {{ order.shipping_city }}, {{ order.shipping_province }}
+Payment      : {{ order.get_payment_method_display }}
+Grand Total  : Rs. {{ order.grand_total|floatformat:0 }}
+
+Items:
+{% for item in order.items.all %}• {{ item.product_name }} ({{ item.variation_name }}) × {{ item.quantity }} = Rs. {{ item.total_price|floatformat:0 }}
+{% endfor %}
+
+Admin Panel: https://aromaticbreeze.com/control-panel/orders/order/{{ order.pk }}/change/

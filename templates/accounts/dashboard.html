@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My Dashboard – {{ site_name }}{% endblock %}
+{% block newsletter %}{% endblock %}
+{% block content %}
+<div class="page-banner page-banner-sm">
+  <div class="container text-white py-4">
+    <h1 class="page-banner-title">My Account</h1>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-4">
+
+    <!-- Sidebar Nav -->
+    <div class="col-lg-3 dash-sidebar-col">
+      {% include 'accounts/partials/sidebar.html' %}
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="col-lg-9 dash-content-col">
+      <div class="dashboard-welcome mb-4">
+        <h4 class="mb-1">Welcome back, <span class="text-gold">{{ user.first_name }}</span>! 👋</h4>
+        <p class="text-muted mb-0">Member since {{ user.date_joined|date:"M Y" }}</p>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="dashboard-stat-card">
+            <div class="stat-icon"><i class="fas fa-box"></i></div>
+            <div class="stat-number">{{ total_orders }}</div>
+            <div class="stat-label">Total Orders</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="dashboard-stat-card">
+            <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+            <div class="stat-number">{{ currency_symbol }} {{ total_spending|floatformat:0 }}</div>
+            <div class="stat-label">Total Spent</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="dashboard-stat-card">
+            <div class="stat-icon"><i class="fas fa-heart"></i></div>
+            <div class="stat-number">{{ wishlist_count }}</div>
+            <div class="stat-label">Wishlist</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="dashboard-stat-card">
+            <div class="stat-icon"><i class="fas fa-star"></i></div>
+            <div class="stat-number">{{ recent_reviews|length }}</div>
+            <div class="stat-label">Reviews</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders -->
+      {% if recent_orders %}
+      <div class="dashboard-card mb-4">
+        <div class="dashboard-card-header">
+          <h6 class="mb-0">Recent Orders</h6>
+          <a href="{% url 'accounts:my_orders' %}" class="btn btn-sm btn-outline-gold">View All</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm dashboard-table">
+            <thead><tr><th>Order #</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              {% for order in recent_orders %}
+              <tr>
+                <td><strong>#{{ order.order_number }}</strong></td>
+                <td>{{ order.created_at|date:"d M Y" }}</td>
+                <td>{{ order.items.count }}</td>
+                <td class="text-gold fw-bold">{{ currency_symbol }} {{ order.grand_total|floatformat:0 }}</td>
+                <td><span class="order-status-badge status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+                <td><a href="{% url 'accounts:order_detail' order.order_number %}" class="btn btn-xs btn-outline-gold">View</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Wishlist Preview -->
+      {% if wishlist_items %}
+      <div class="dashboard-card mb-4">
+        <div class="dashboard-card-header">
+          <h6 class="mb-0">My Wishlist</h6>
+          <a href="{% url 'accounts:wishlist' %}" class="btn btn-sm btn-outline-gold">View All</a>
+        </div>
+        <div class="row g-3 p-3">
+          {% for item in wishlist_items %}
+          <div class="col-6 col-md-3">
+            <a href="{{ item.product.get_absolute_url }}" class="wishlist-preview-card text-center d-block">
+              {% with item.product.get_primary_image as img %}
+              {% if img %}<img src="{{ img.image.url }}" alt="{{ item.product.name }}">{% endif %}
+              {% endwith %}
+              <p class="mt-1 mb-0" style="font-size:12px;font-weight:600;">{{ item.product.name|truncatewords:4 }}</p>
+              <span class="text-gold" style="font-size:12px;">{{ currency_symbol }} {{ item.product.selling_price|floatformat:0 }}</span>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

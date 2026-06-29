@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}My Addresses – {{ site_name }}{% endblock %}
+{% block newsletter %}{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row g-4">
+    <div class="col-lg-3">{% include 'accounts/partials/sidebar.html' %}</div>
+    <div class="col-lg-9">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 style="font-family:var(--serif);margin:0;">My Addresses</h4>
+        <a href="{% url 'accounts:address_add' %}" class="btn-gold-solid">
+          <i class="fas fa-plus me-2"></i>Add New Address
+        </a>
+      </div>
+      {% if addresses %}
+      <div class="row g-3">
+        {% for addr in addresses %}
+        <div class="col-md-6">
+          <div style="background:#fff;border:{% if addr.is_default %}2px solid var(--gold){% else %}1px solid var(--bdr){% endif %};border-radius:12px;padding:20px;position:relative;">
+            {% if addr.is_default %}
+            <span style="position:absolute;top:12px;right:12px;background:var(--gold);color:var(--dark);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;">DEFAULT</span>
+            {% endif %}
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gold);letter-spacing:1px;margin-bottom:8px;">
+              {{ addr.get_address_type_display }}
+            </div>
+            <strong style="font-size:15px;color:var(--dark);">{{ addr.full_name }}</strong>
+            <p style="font-size:13px;color:#666;margin:6px 0 0;line-height:1.7;">
+              {{ addr.address_line1 }}{% if addr.address_line2 %}, {{ addr.address_line2 }}{% endif %}<br>
+              {{ addr.city }}, {{ addr.province }}<br>
+              Phone: {{ addr.phone }}
+            </p>
+            <div style="display:flex;gap:8px;margin-top:14px;">
+              <a href="{% url 'accounts:address_edit' addr.pk %}"
+                style="font-size:12px;font-weight:600;color:var(--gold);border:1px solid var(--gold);padding:5px 14px;border-radius:20px;">
+                Edit
+              </a>
+              {% if not addr.is_default %}
+              <a href="{% url 'accounts:address_delete' addr.pk %}"
+                style="font-size:12px;font-weight:600;color:#e74c3c;border:1px solid #e74c3c;padding:5px 14px;border-radius:20px;"
+                onclick="return confirm('Delete this address?')">
+                Delete
+              </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-5">
+        <i class="fas fa-map-marker-alt fa-4x mb-3" style="color:#ddd;"></i>
+        <h5>No addresses saved yet</h5>
+        <p class="text-muted mb-4">Add a delivery address to speed up checkout.</p>
+        <a href="{% url 'accounts:address_add' %}" class="btn-gold-solid">
+          <i class="fas fa-plus me-2"></i>Add Address
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

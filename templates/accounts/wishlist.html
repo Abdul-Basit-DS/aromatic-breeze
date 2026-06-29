@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My Wishlist – {{ site_name }}{% endblock %}
+{% block newsletter %}{% endblock %}
+{% block content %}
+<div class="page-banner page-banner-sm">
+  <div class="container text-white py-4">
+    <h1 class="page-banner-title">My Wishlist</h1>
+  </div>
+</div>
+<div class="container py-5">
+  <div class="row g-4">
+    <div class="col-lg-3">{% include 'accounts/partials/sidebar.html' %}</div>
+    <div class="col-lg-9">
+      {% if items %}
+      <div class="prods-grid">
+        {% for item in items %}{% include 'partials/product_card.html' with product=item.product %}{% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-5">
+        <i class="fas fa-heart fa-4x mb-3" style="color:#ddd;"></i>
+        <h4>Your wishlist is empty</h4>
+        <p class="text-muted mb-4">Save products you love to buy them later.</p>
+        <a href="{% url 'shop:shop' %}" class="btn-gold-solid">Browse Products</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

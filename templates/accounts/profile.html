@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}My Profile – {{ site_name }}{% endblock %}
+{% block newsletter %}{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row g-4">
+    <div class="col-lg-3">{% include 'accounts/partials/sidebar.html' %}</div>
+    <div class="col-lg-9">
+      <h4 style="font-family:var(--serif);margin-bottom:24px;">Edit Profile</h4>
+      {% if messages %}{% for msg in messages %}<div class="alert alert-{{ msg.tags }}">{{ msg }}</div>{% endfor %}{% endif %}
+      <div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:28px;">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;display:block;">First Name *</label>
+              <input type="text" name="first_name" class="rf-input"
+                value="{{ user.first_name }}" required>
+            </div>
+            <div class="col-md-6">
+              <label style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;display:block;">Last Name</label>
+              <input type="text" name="last_name" class="rf-input"
+                value="{{ user.last_name }}">
+            </div>
+            <div class="col-md-6">
+              <label style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;display:block;">Email</label>
+              <input type="email" class="rf-input"
+                value="{{ user.email }}" disabled
+                style="background:#f5f5f5;color:#999;cursor:not-allowed;">
+              <small style="font-size:11px;color:#999;">Email change nahi ho sakti</small>
+            </div>
+            <div class="col-md-6">
+              <label style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;display:block;">Phone Number</label>
+              <input type="text" name="phone" class="rf-input"
+                value="{{ user.profile.phone|default:'' }}">
+            </div>
+            <div class="col-md-6">
+              <label style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;display:block;">Date of Birth</label>
+              <input type="date" name="date_of_birth" class="rf-input"
+                value="{{ user.profile.date_of_birth|default:'' }}">
+            </div>
+            <div class="col-md-6">
+              <label style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;display:block;">Gender</label>
+              <select name="gender" class="rf-input">
+                <option value="">-- Select --</option>
+                <option value="male" {% if user.profile.gender == 'male' %}selected{% endif %}>Male</option>
+                <option value="female" {% if user.profile.gender == 'female' %}selected{% endif %}>Female</option>
+                <option value="other" {% if user.profile.gender == 'other' %}selected{% endif %}>Other</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;display:block;">Profile Picture</label>
+              <input type="file" name="avatar" class="rf-input" accept="image/*">
+              {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}"
+                style="width:60px;height:60px;border-radius:50%;object-fit:cover;margin-top:8px;border:2px solid var(--gold);">
+              {% endif %}
+            </div>
+            <div class="col-12">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#555;">
+                <input type="checkbox" name="newsletter_subscribed"
+                  {% if user.profile.newsletter_subscribed %}checked{% endif %}
+                  style="accent-color:var(--gold);width:16px;height:16px;">
+                Subscribe to newsletter for exclusive offers
+              </label>
+            </div>
+            <div class="col-12 mt-2">
+              <button type="submit" class="btn-gold-solid">
+                <i class="fas fa-save me-2"></i>Save Changes
+              </button>
+              <a href="{% url 'accounts:change_password' %}"
+                style="margin-left:16px;font-size:13px;color:var(--gold);font-weight:600;">
+                Change Password →
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_css %}
+<style>
+.rf-input{width:100%;border:1.5px solid var(--bdr);border-radius:8px;padding:10px 14px;font-size:13px;font-family:var(--sans);outline:none;transition:.3s;background:#fff;}
+.rf-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.12);}
+</style>
+{% endblock %}

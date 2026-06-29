@@ -1,0 +1,511 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Checkout – {{ site_name }}{% endblock %}
+{% block newsletter %}{% endblock %}
+
+{% block extra_css %}
+<style>
+.co-wrap{padding:40px 0 60px;}
+.co-section{background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:24px;margin-bottom:20px;}
+.co-sec-title{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:8px;}
+.co-sec-title i{color:var(--gold);}
+.co-label{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;display:block;}
+.co-input{width:100%;border:1.5px solid var(--bdr);border-radius:8px;padding:11px 14px;font-size:13px;font-family:var(--sans);outline:none;transition:.3s;background:#fff;}
+.co-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.12);}
+.co-input::placeholder{color:#bbb;}
+
+/* Shipping options */
+.ship-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ship-opt{border:2px solid var(--bdr);border-radius:10px;padding:14px;cursor:pointer;transition:.2s;display:flex;align-items:flex-start;gap:10px;}
+.ship-opt:has(input:checked){border-color:var(--gold);background:#fffdf5;}
+.ship-opt input{margin-top:3px;accent-color:var(--gold);}
+.ship-opt-name{font-size:13px;font-weight:700;color:var(--dark);}
+.ship-opt-days{font-size:11px;color:#999;margin-top:2px;}
+
+/* Payment options */
+.pay-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.pay-opt{border:2px solid var(--bdr);border-radius:10px;padding:14px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:10px;}
+.pay-opt:has(input:checked){border-color:var(--gold);background:#fffdf5;}
+.pay-opt input{accent-color:var(--gold);}
+.pay-opt i{font-size:1.2rem;color:var(--gold);}
+.pay-opt-name{font-size:13px;font-weight:700;color:var(--dark);}
+.pay-opt-sub{font-size:11px;color:#999;}
+
+/* Order Summary */
+.order-sum-box{background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:24px;position:sticky;top:90px;}
+.os-title{font-family:var(--serif);font-size:1.1rem;color:var(--dark);margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--bdr);}
+.os-item{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f5f0e8;}
+.os-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.os-item-img{width:56px;height:56px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr);flex-shrink:0;}
+.os-item-name{font-size:13px;font-weight:600;color:var(--dark);line-height:1.3;}
+.os-item-var{font-size:11px;color:#999;}
+.os-item-qty{font-size:11px;color:#999;}
+.os-item-price{font-size:13px;font-weight:700;color:var(--dark);margin-left:auto;white-space:nowrap;}
+.os-row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:10px;color:#555;}
+.os-total{display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding-top:12px;border-top:2px solid var(--bdr);margin-top:6px;}
+.os-total-price{color:var(--gold);font-family:var(--serif);font-size:1.25rem;}
+.coupon-row{display:flex;border:1.5px solid var(--bdr);border-radius:8px;overflow:hidden;margin:14px 0;}
+.coupon-row input{flex:1;border:none;padding:10px 14px;font-size:13px;font-family:var(--sans);outline:none;}
+.coupon-row button{background:var(--gold);border:none;padding:0 16px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);}
+.btn-place-order{width:100%;background:var(--gold);color:#fff;border:none;padding:15px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:.3s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;}
+.btn-place-order:hover{background:var(--gold-d);}
+@media(max-width:575px){
+  .co-wrap{padding:20px 0 40px;}
+  .co-section{padding:14px !important;margin-bottom:14px !important;}
+  .co-sec-title{font-size:13px !important;margin-bottom:14px !important;}
+  .co-input{padding:9px 12px !important;font-size:13px !important;}
+  .ship-opts{grid-template-columns:1fr !important;gap:8px !important;}
+  .ship-opt{padding:12px !important;}
+  .ship-opt-name{font-size:13px !important;}
+  .pay-opts{grid-template-columns:1fr 1fr !important;gap:8px !important;}
+  .pay-opt{padding:10px !important;gap:8px !important;flex-direction:column;text-align:center;}
+  .pay-opt i{font-size:1.5rem !important;}
+  .pay-opt-name{font-size:12px !important;}
+  .pay-opt-sub{font-size:10px !important;}
+  .order-sum-box{
+    position:static !important;
+    margin-top:16px;
+    padding:16px !important;
+  }
+  .os-title{font-size:1rem !important;}
+  .os-item-img{width:48px !important;height:48px !important;}
+  .os-item-name{font-size:12px !important;}
+  .os-item-price{font-size:12px !important;}
+  .os-row{font-size:13px !important;}
+  .os-total{font-size:14px !important;}
+  .os-total-price{font-size:1.1rem !important;}
+  .btn-place-order{
+    font-size:14px !important;
+    padding:13px !important;
+  }
+  #payDetail{padding:12px !important;}
+  #payDetail .row{gap:4px !important;}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-banner page-banner-sm">
+  <div class="container text-center text-white py-4">
+    <h1 class="page-banner-title">Checkout</h1>
+    <ol class="breadcrumb justify-content-center">
+      <li class="breadcrumb-item"><a href="{% url 'shop:cart' %}" class="text-gold">Cart</a></li>
+      <li class="breadcrumb-item active text-white-50">Checkout</li>
+    </ol>
+  </div>
+</div>
+
+<div class="container co-wrap">
+  <form method="post" id="checkoutForm">
+    {% csrf_token %}
+    <div class="row g-4">
+      
+      <!-- LEFT -->
+      <div class="col-lg-7">
+        <!-- Saved Addresses -->
+{% if saved_addresses %}
+<div style="margin-bottom:20px;">
+  <span class="co-label">Select Saved Address</span>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    {% for addr in saved_addresses %}
+    <div style="border:2px solid var(--bdr);border-radius:10px;padding:14px;cursor:pointer;transition:.2s;"
+      class="saved-addr-card" onclick="fillAddress(this)"
+      data-name="{{ addr.full_name }}"
+      data-phone="{{ addr.phone }}"
+      data-line1="{{ addr.address_line1 }}"
+      data-line2="{{ addr.address_line2 }}"
+      data-city="{{ addr.city }}"
+      data-province="{{ addr.province }}"
+      data-postal="{{ addr.postal_code }}"
+      {% if addr.is_default %}style="border-color:var(--gold);background:#fffdf5;"{% endif %}>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <strong style="font-size:14px;color:var(--dark);">{{ addr.full_name }}</strong>
+          {% if addr.is_default %}<span style="font-size:10px;background:var(--gold);color:var(--dark);padding:2px 8px;border-radius:10px;margin-left:8px;font-weight:700;">Default</span>{% endif %}
+          <p style="font-size:12px;color:#999;margin:4px 0 0;">
+            {{ addr.address_line1 }}, {{ addr.city }}, {{ addr.province }}
+          </p>
+          <p style="font-size:12px;color:#999;margin:2px 0 0;">
+            Phone: {{ addr.phone }}
+          </p>
+        </div>
+        <i class="fas fa-check-circle" style="font-size:1.2rem;color:{% if addr.is_default %}var(--gold){% else %}#ddd{% endif %};"></i>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div style="margin-top:10px;">
+    <button type="button" onclick="clearAddress()"
+      style="font-size:12px;color:#999;background:none;border:1px solid var(--bdr);padding:5px 14px;border-radius:20px;cursor:pointer;">
+      Enter New Address
+    </button>
+  </div>
+</div>
+<hr style="border-color:var(--bdr);margin-bottom:20px;">
+{% endif %}
+        <!-- Delivery Info -->
+        <div class="co-section">
+          <div class="co-sec-title"><i class="fas fa-truck"></i> Delivery Information</div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <span class="co-label">Full Name *</span>
+              <input type="text" name="full_name" class="co-input" placeholder="Full Name" required
+                value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}">
+            </div>
+            <div class="col-md-6">
+              <span class="co-label">Email *</span>
+              <input type="email" name="email" class="co-input" placeholder="Email Address" required
+                value="{% if user.is_authenticated %}{{ user.email }}{% endif %}">
+            </div>
+            <div class="col-md-6">
+              <span class="co-label">Phone *</span>
+              <input type="text" name="phone" class="co-input" placeholder="Phone Number" required>
+            </div>
+            <div class="col-12">
+              <span class="co-label">Address Line 1 *</span>
+              <input type="text" name="address_line1" class="co-input" placeholder="Street Address / Area" required>
+            </div>
+            <div class="col-12">
+              <span class="co-label">Address Line 2</span>
+              <input type="text" name="address_line2" class="co-input" placeholder="House/Flat No. (optional)">
+            </div>
+            <div class="col-md-5">
+              <span class="co-label">City *</span>
+              <input type="text" name="city" class="co-input" placeholder="City" required id="cityInput">
+            </div>
+            <div class="col-md-4">
+              <span class="co-label">Province *</span>
+              <select name="province" class="co-input">
+                <option value="Punjab">Punjab</option>
+                <option value="Sindh">Sindh</option>
+                <option value="KPK">Khyber Pakhtunkhwa</option>
+                <option value="Balochistan">Balochistan</option>
+                <option value="AJK">AJK</option>
+                <option value="ICT">Islamabad</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <span class="co-label">Postal Code</span>
+              <input type="text" name="postal_code" class="co-input" placeholder="Optional">
+            </div>
+            {% if user.is_authenticated %}
+            <div class="col-12">
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#555;cursor:pointer;">
+                <input type="checkbox" name="save_address" style="accent-color:var(--gold);width:16px;height:16px;">
+                Save this address for future orders
+              </label>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Shipping Method -->
+        <div class="co-section">
+          <div class="co-sec-title"><i class="fas fa-shipping-fast"></i> Shipping Method</div>
+          <div class="ship-opts">
+            <label class="ship-opt">
+              <input type="radio" name="shipping_type" value="standard" checked onchange="calcShipping()">
+              <div>
+                <div class="ship-opt-name"><i class="fas fa-truck me-1" style="color:var(--gold);"></i> Standard Delivery</div>
+                <div class="ship-opt-days">3-5 Business Days</div>
+                <div class="ship-opt-days" id="stdFee" style="color:var(--gold);font-weight:700;margin-top:4px;">Calculated below</div>
+              </div>
+            </label>
+            <label class="ship-opt">
+              <input type="radio" name="shipping_type" value="express" onchange="calcShipping()">
+              <div>
+                <div class="ship-opt-name"><i class="fas fa-bolt me-1" style="color:var(--gold);"></i> Express Delivery</div>
+                <div class="ship-opt-days">2-3 Business Days</div>
+                <div class="ship-opt-days" style="color:var(--gold);font-weight:700;margin-top:4px;">Additional charges</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+<div class="co-section">
+  <div class="co-sec-title"><i class="fas fa-credit-card"></i> Payment Method</div>
+  <div class="pay-opts">
+
+    <label class="pay-opt">
+      <input type="radio" name="payment_method" value="cod" checked onchange="showPayDetail('cod')">
+      <i class="fas fa-money-bill-wave"></i>
+      <div>
+        <div class="pay-opt-name">Cash on Delivery</div>
+        <div class="pay-opt-sub">Pay when you receive</div>
+      </div>
+    </label>
+
+    <label class="pay-opt">
+      <input type="radio" name="payment_method" value="bank_transfer" onchange="showPayDetail('bank')">
+      <i class="fas fa-university"></i>
+      <div>
+        <div class="pay-opt-name">Bank Transfer</div>
+        <div class="pay-opt-sub">Transfer before dispatch</div>
+      </div>
+    </label>
+
+    <label class="pay-opt">
+      <input type="radio" name="payment_method" value="jazzcash" onchange="showPayDetail('jazz')">
+      <i class="fas fa-mobile-alt"></i>
+      <div>
+        <div class="pay-opt-name">JazzCash</div>
+        <div class="pay-opt-sub">Mobile payment</div>
+      </div>
+    </label>
+
+    <label class="pay-opt">
+      <input type="radio" name="payment_method" value="easypaisa" onchange="showPayDetail('easy')">
+      <i class="fas fa-wallet"></i>
+      <div>
+        <div class="pay-opt-name">EasyPaisa</div>
+        <div class="pay-opt-sub">Mobile payment</div>
+      </div>
+    </label>
+
+  </div>
+
+  <!-- Payment Details Box -->
+          <div id="payDetail" style="display:none;margin-top:16px;background:#fffdf5;border:1.5px solid var(--gold);border-radius:10px;padding:16px;">
+
+            <div id="detail-cod" class="pay-detail-box">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <i class="fas fa-truck" style="color:var(--gold);font-size:1.2rem;"></i>
+                <strong style="font-size:14px;color:var(--dark);">Cash on Delivery</strong>
+              </div>
+              <p style="font-size:13px;color:#555;margin:0;line-height:1.7;">
+                Pay cash when your order arrives at your door. Our delivery rider will collect the payment. 
+                <br><strong style="color:var(--dark);">Note:</strong> A small COD charge may apply.
+              </p>
+            </div>
+
+            <div id="detail-bank" class="pay-detail-box" style="display:none;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                <i class="fas fa-university" style="color:var(--gold);font-size:1.2rem;"></i>
+                <strong style="font-size:14px;color:var(--dark);">Bank Transfer Details</strong>
+              </div>
+              <div style="background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:14px;">
+                <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;font-size:13px;">
+                  <span style="color:#999;font-weight:600;">Bank Name:</span><span style="color:var(--dark);font-weight:700;">Meezan Bank</span>
+                  <span style="color:#999;font-weight:600;">Account Title:</span><span style="color:var(--dark);font-weight:700;">Abdul Basit</span>
+                  <span style="color:#999;font-weight:600;">Account No:</span><span style="color:var(--dark);font-weight:700;">00300110664565</span>
+                  <span style="color:#999;font-weight:600;">IBAN:</span><span style="color:var(--dark);font-weight:700;">PK61MEZN0000300110664565</span>
+                </div>
+              </div>
+              <p style="font-size:12px;color:#999;margin:10px 0 0;">After transfer, send payment screenshot on WhatsApp. Order will be dispatched after confirmation.</p>
+            </div>
+
+            <div id="detail-jazz" class="pay-detail-box" style="display:none;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                <i class="fas fa-mobile-alt" style="color:var(--gold);font-size:1.2rem;"></i>
+                <strong style="font-size:14px;color:var(--dark);">JazzCash Details</strong>
+              </div>
+              <div style="background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:14px;">
+                <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;font-size:13px;">
+                  <span style="color:#999;font-weight:600;">Account Name:</span><span style="color:var(--dark);font-weight:700;">Abdul Basit</span>
+                  <span style="color:#999;font-weight:600;">Mobile No:</span><span style="color:var(--dark);font-weight:700;">0333-3216015</span>
+                </div>
+              </div>
+              <p style="font-size:12px;color:#999;margin:10px 0 0;">Send payment via JazzCash app and share screenshot on WhatsApp for order confirmation.</p>
+            </div>
+
+            <div id="detail-easy" class="pay-detail-box" style="display:none;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                <i class="fas fa-wallet" style="color:var(--gold);font-size:1.2rem;"></i>
+                <strong style="font-size:14px;color:var(--dark);">EasyPaisa Details</strong>
+              </div>
+              <div style="background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:14px;">
+                <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;font-size:13px;">
+                  <span style="color:#999;font-weight:600;">Account Name:</span><span style="color:var(--dark);font-weight:700;">Abdul Basit</span>
+                  <span style="color:#999;font-weight:600;">Mobile No:</span><span style="color:var(--dark);font-weight:700;">0333-3216015</span>
+                </div>
+              </div>
+              <p style="font-size:12px;color:#999;margin:10px 0 0;">Send payment via EasyPaisa app and share screenshot on WhatsApp for order confirmation.</p>
+            </div>
+
+          </div>
+        </div>
+                <!-- Order Notes -->
+        <div class="co-section">
+          <div class="co-sec-title"><i class="fas fa-sticky-note"></i> Order Notes <small style="font-weight:400;color:#999;">(Optional)</small></div>
+          <textarea name="customer_notes" class="co-input" rows="3" placeholder="Any special instructions for your order?"></textarea>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Order Summary -->
+      <div class="col-lg-5">
+        <div class="order-sum-box">
+          <div class="os-title">Order Summary</div>
+
+          <!-- Items -->
+          {% for item in cart_items %}
+          <div class="os-item">
+            {% with item.product.get_primary_image as img %}
+            {% if img %}<img src="{{ img.image.url }}" alt="{{ item.product.name }}" class="os-item-img">{% endif %}
+            {% endwith %}
+            <div style="flex:1;min-width:0;">
+              <div class="os-item-name">{{ item.product.name|truncatewords:5 }}</div>
+              {% if item.variation %}<div class="os-item-var">{{ item.variation.name }}</div>{% endif %}
+              <div class="os-item-qty">× {{ item.quantity }}</div>
+            </div>
+            <div class="os-item-price">Rs. {{ item.total_price|floatformat:0 }}</div>
+          </div>
+          {% endfor %}
+
+          <!-- Coupon -->
+          <div class="coupon-row">
+            <input type="text" name="coupon_code" id="couponCode" placeholder="Coupon code (optional)">
+            <button type="button" onclick="applyCoupon()">Apply</button>
+          </div>
+          <div id="couponMsg" style="font-size:12px;margin-bottom:10px;"></div>
+
+          <!-- Totals -->
+          <div class="os-row"><span>Subtotal</span><strong>Rs. {{ subtotal|floatformat:0 }}</strong></div>
+          <div class="os-row" id="discRow" style="display:none;color:#27ae60;"><span>Discount</span><strong id="discAmt"></strong></div>
+          <div class="os-row"><span>Shipping</span><span id="shippingDisplay" style="color:#999;font-size:13px;">Enter city above</span></div>
+          <div class="os-row" id="codRow" style="display:none;"><span>COD Charge</span><span id="codAmt"></span></div>
+
+          <div class="os-total">
+            <span>Grand Total</span>
+            <span class="os-total-price" id="grandTotal">Rs. {{ subtotal|floatformat:0 }}</span>
+          </div>
+
+          <button type="submit" class="btn-place-order">
+            <i class="fas fa-lock"></i> Place Order
+          </button>
+          <p style="text-align:center;font-size:12px;color:#999;margin-top:10px;">
+            <i class="fas fa-shield-alt me-1" style="color:var(--gold);"></i>Secure & Safe Checkout
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const subtotal = {{ subtotal }};
+const shippingUrl = "{% url 'orders:shipping_cost' %}";
+const sym = 'Rs.';
+let shippingCharge = 0;
+let codCharge = 0;
+let discountAmt = 0;
+
+document.getElementById('cityInput')?.addEventListener('blur', calcShipping);
+document.querySelectorAll('[name=shipping_type]').forEach(r => r.addEventListener('change', calcShipping));
+document.querySelectorAll('[name=payment_method]').forEach(r => r.addEventListener('change', calcShipping));
+function showPayDetail(type) {
+  document.getElementById('payDetail').style.display = 'block';
+  document.querySelectorAll('.pay-detail-box').forEach(b => b.style.display = 'none');
+  const map = {cod:'detail-cod', bank:'detail-bank', jazz:'detail-jazz', easy:'detail-easy'};
+  const el = document.getElementById(map[type]);
+  if (el) el.style.display = 'block';
+}
+// Show COD by default
+showPayDetail('cod');
+
+function calcShipping() {
+  const city = document.getElementById('cityInput')?.value.trim();
+  const type = document.querySelector('[name=shipping_type]:checked')?.value || 'standard';
+  const payment = document.querySelector('[name=payment_method]:checked')?.value || 'cod';
+  if (!city) return;
+
+  fetch(`${shippingUrl}?city=${encodeURIComponent(city)}&type=${type}&subtotal=${subtotal}`)
+    .then(r => r.json()).then(d => {
+      shippingCharge = d.free_shipping ? 0 : d.charge;
+      const shLabel = d.free_shipping ? 'Free 🎉' : `${sym} ${d.charge}`;
+      document.getElementById('shippingDisplay').textContent = `${shLabel} (${d.estimated_days})`;
+      document.getElementById('shippingDisplay').style.color = d.free_shipping ? '#27ae60' : '#333';
+
+      const codRow = document.getElementById('codRow');
+      if (payment === 'cod' && d.cod_charge > 0) {
+        codCharge = d.cod_charge;
+        codRow.style.display = 'flex';
+        document.getElementById('codAmt').textContent = `${sym} ${d.cod_charge}`;
+      } else {
+        codCharge = 0;
+        codRow.style.display = 'none';
+      }
+      updateTotal();
+    });
+}
+
+function updateTotal() {
+  const total = subtotal - discountAmt + shippingCharge + codCharge;
+  document.getElementById('grandTotal').textContent = `${sym} ${Math.round(total).toLocaleString()}`;
+}
+
+function applyCoupon() {
+  const code = document.getElementById('couponCode').value.trim();
+  const msgEl = document.getElementById('couponMsg');
+  if (!code) return;
+
+  fetch('/coupons/validate/', {
+    method: 'POST',
+    headers: {'X-CSRFToken': CSRF, 'Content-Type': 'application/x-www-form-urlencoded'},
+    body: `code=${encodeURIComponent(code)}&subtotal=${subtotal}`
+  }).then(r => r.json()).then(d => {
+    if (d.valid) {
+      discountAmt = d.discount;
+      msgEl.style.cssText = 'color:#27ae60;font-weight:600;';
+      msgEl.textContent = '✓ ' + d.message;
+      const discRow = document.getElementById('discRow');
+      discRow.style.display = 'flex';
+      document.getElementById('discAmt').textContent = `- ${sym} ${Math.round(d.discount).toLocaleString()}`;
+    } else {
+      discountAmt = 0;
+      msgEl.style.cssText = 'color:#e74c3c;font-weight:600;';
+      msgEl.textContent = '✗ ' + d.message;
+      document.getElementById('discRow').style.display = 'none';
+    }
+    updateTotal();
+  });
+}
+// Fill form from saved address
+function fillAddress(card) {
+  document.querySelectorAll('.saved-addr-card').forEach(c => {
+    c.style.borderColor = 'var(--bdr)';
+    c.style.background = '#fff';
+    c.querySelector('i').style.color = '#ddd';
+  });
+  card.style.borderColor = 'var(--gold)';
+  card.style.background = '#fffdf5';
+  card.querySelector('i').style.color = 'var(--gold)';
+
+  document.querySelector('[name=full_name]').value = card.dataset.name;
+  document.querySelector('[name=phone]').value = card.dataset.phone;
+  document.querySelector('[name=address_line1]').value = card.dataset.line1;
+  document.querySelector('[name=address_line2]').value = card.dataset.line2;
+  document.getElementById('cityInput').value = card.dataset.city;
+  document.querySelector('[name=province]').value = card.dataset.province;
+  document.querySelector('[name=postal_code]').value = card.dataset.postal;
+
+  // Calculate shipping for filled city
+  calcShipping();
+}
+
+function clearAddress() {
+  document.querySelectorAll('.saved-addr-card').forEach(c => {
+    c.style.borderColor = 'var(--bdr)';
+    c.style.background = '#fff';
+    c.querySelector('i').style.color = '#ddd';
+  });
+  document.querySelector('[name=full_name]').value = '';
+  document.querySelector('[name=phone]').value = '';
+  document.querySelector('[name=address_line1]').value = '';
+  document.querySelector('[name=address_line2]').value = '';
+  document.getElementById('cityInput').value = '';
+  document.querySelector('[name=province]').value = 'Punjab';
+  document.querySelector('[name=postal_code]').value = '';
+}
+
+// Auto select default address on page load
+document.addEventListener('DOMContentLoaded', function(){
+  const defaultAddr = document.querySelector('.saved-addr-card[style*="border-color:var(--gold)"]');
+  if(defaultAddr) fillAddress(defaultAddr);
+});
+</script>
+{% endblock %}

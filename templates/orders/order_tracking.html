@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Track Order – {{ site_name }}{% endblock %}
+{% block newsletter %}{% endblock %}
+{% block content %}
+<div class="page-banner page-banner-sm">
+  <div class="container text-center text-white py-4">
+    <h1 class="page-banner-title">Track Your Order</h1>
+    <p class="page-banner-sub">Enter your order number and email to track</p>
+  </div>
+</div>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+
+      <!-- Search Form -->
+      <div class="track-form-card mb-5">
+        <h5 class="mb-4"><i class="fas fa-search me-2 text-gold"></i>Find Your Order</h5>
+        <form method="post">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Order Number</label>
+              <input type="text" name="order_number" class="form-control" placeholder="e.g. AB-2024-XYZ123" value="{{ order_number }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email Address</label>
+              <input type="email" name="email" class="form-control" placeholder="your@email.com" required>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-gold px-4">
+                <i class="fas fa-search me-2"></i>Track Order
+              </button>
+            </div>
+          </div>
+        </form>
+        {% if error %}
+        <div class="alert alert-danger mt-3">{{ error }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Order Result -->
+      {% if order %}
+      <div class="track-result">
+        <div class="track-header d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+          <div>
+            <h5 class="mb-1">Order #{{ order.order_number }}</h5>
+            <p class="text-muted mb-0" style="font-size:13px;">Placed on {{ order.created_at|date:"d M Y, h:i A" }}</p>
+          </div>
+          <span class="order-status-badge status-{{ order.status }} fs-6 px-3 py-2">{{ order.get_status_display }}</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="track-progress mb-5">
+          {% with statuses="pending,confirmed,packed,shipped,out_for_delivery,delivered" %}
+          {% with current=order.status %}
+          <div class="progress-steps">
+            {% for step in "Pending,Confirmed,Packed,Shipped,Out for Delivery,Delivered"|split:"," %}
+            <div class="progress-step {% if forloop.counter0 <= order.get_status_display|lower|length %}completed{% endif %}">
+              <div class="step-dot"><i class="fas {% if forloop.counter == 1 %}fa-clock{% elif forloop.counter == 2 %}fa-check{% elif forloop.counter == 3 %}fa-box{% elif forloop.counter == 4 %}fa-truck{% elif forloop.counter == 5 %}fa-map-marker-alt{% else %}fa-home{% endif %}"></i></div>
+              <span class="step-label">{{ step }}</span>
+            </div>
+            {% endfor %}
+          </div>
+          {% endwith %}
+          {% endwith %}
+        </div>
+
+        <!-- Status Timeline -->
+        {% if order.status_history.all %}
+        <div class="status-timeline mb-4">
+          <h6 class="mb-3">Status Updates</h6>
+          {% for history in order.status_history.all %}
+          <div class="timeline-entry d-flex gap-3 mb-3">
+            <div class="timeline-entry-dot"></div>
+            <div>
+              <strong>{{ history.new_status|title }}</strong>
+              <p class="mb-0 text-muted" style="font-size:12px;">{{ history.created_at|date:"d M Y, h:i A" }}{% if history.note %} — {{ history.note }}{% endif %}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Tracking Number -->
+        {% if order.tracking_number %}
+        <div class="alert alert-info">
+          <i class="fas fa-truck me-2"></i>
+          <strong>Tracking Number:</strong> {{ order.tracking_number }}
+          {% if order.courier_name %} ({{ order.courier_name }}){% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Items -->
+        <div class="track-items mb-4">
+          <h6 class="mb-3">Items Ordered</h6>
+          {% for item in order.items.all %}
+          <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <div>
+              <span class="fw-semibold">{{ item.product_name }}</span>
+              {% if item.variation_name %}<span class="text-muted ms-1 small">({{ item.variation_name }})</span>{% endif %}
+              <span class="text-muted ms-2">× {{ item.quantity }}</span>
+            </div>
+            <span class="fw-bold">{{ currency_symbol }} {{ item.total_price|floatformat:0 }}</span>
+          </div>
+          {% endfor %}
+          <div class="d-flex justify-content-between mt-2 fw-bold">
+            <span>Grand Total</span>
+            <span class="text-gold">{{ currency_symbol }} {{ order.grand_total|floatformat:0 }}</span>
+          </div>
+        </div>
+
+        <!-- Shipping Address -->
+        <div class="track-address p-3 rounded" style="background:var(--grey-light);">
+          <h6 class="mb-2"><i class="fas fa-map-marker-alt me-2 text-gold"></i>Delivering To</h6>
+          <p class="mb-0">{{ order.shipping_full_name }}<br>
+          {{ order.shipping_address_line1 }}{% if order.shipping_address_line2 %}, {{ order.shipping_address_line2 }}{% endif %}<br>
+          {{ order.shipping_city }}, {{ order.shipping_province }}<br>
+          Phone: {{ order.shipping_phone }}</p>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

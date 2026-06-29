@@ -1,0 +1,100 @@
+{% extends "admin/base_site.html" %}
+{% load i18n log %}
+
+{% block content %}
+<div style="padding:0;">
+
+  <!-- Welcome -->
+  <div style="background:linear-gradient(135deg,#1a1a2e,#22223a);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:22px 28px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <div>
+      <h2 style="font-family:'Playfair Display',serif;color:#c9a84c;font-size:1.4rem;margin:0 0 4px;">Welcome, {{ user.first_name|default:user.email }} 👋</h2>
+      <p style="color:rgba(255,255,255,.5);margin:0;font-size:13px;">The Aromatic Breeze — Business Management Panel</p>
+    </div>
+    <a href="/" target="_blank" style="background:linear-gradient(135deg,#c9a84c,#a07820);color:#1a1a2e;padding:10px 20px;border-radius:8px;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px;">
+      <i class="fas fa-external-link-alt"></i> View Website
+    </a>
+  </div>
+
+  <!-- Quick Stats -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:24px;">
+    {% for item in quick_links %}
+    <a href="{{ item.url }}" style="background:#1a1a2e;border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:16px;text-align:center;display:block;transition:.3s;text-decoration:none;" onmouseover="this.style.borderColor='#c9a84c'" onmouseout="this.style.borderColor='rgba(201,168,76,.2)'">
+      <i class="{{ item.icon }}" style="font-size:1.6rem;color:#c9a84c;display:block;margin-bottom:8px;"></i>
+      <span style="font-size:12px;color:rgba(255,255,255,.6);font-weight:600;">{{ item.name }}</span>
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- Quick Actions -->
+  <div style="background:#1a1a2e;border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:20px;margin-bottom:24px;">
+    <h3 style="color:#c9a84c;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid rgba(201,168,76,.1);">
+      ⚡ Quick Actions
+    </h3>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <a href="{% url 'admin:shop_product_add' %}" style="background:#22223a;border:1px solid rgba(201,168,76,.3);color:#c9a84c;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;"><i class="fas fa-plus me-1"></i> Add Product</a>
+      <a href="{% url 'admin:shop_banner_add' %}" style="background:#22223a;border:1px solid rgba(201,168,76,.3);color:#c9a84c;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;"><i class="fas fa-image me-1"></i> Add Banner</a>
+      <a href="{% url 'admin:shop_category_add' %}" style="background:#22223a;border:1px solid rgba(201,168,76,.3);color:#c9a84c;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;"><i class="fas fa-folder-plus me-1"></i> Add Category</a>
+      <a href="{% url 'admin:blog_blogpost_add' %}" style="background:#22223a;border:1px solid rgba(201,168,76,.3);color:#c9a84c;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;"><i class="fas fa-pen me-1"></i> Write Blog</a>
+      <a href="{% url 'admin:coupons_coupon_add' %}" style="background:#22223a;border:1px solid rgba(201,168,76,.3);color:#c9a84c;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;"><i class="fas fa-ticket-alt me-1"></i> Add Coupon</a>
+      <a href="{% url 'admin:pages_sitesettings_changelist' %}" style="background:#22223a;border:1px solid rgba(201,168,76,.3);color:#c9a84c;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;"><i class="fas fa-cog me-1"></i> Site Settings</a>
+      <a href="{% url 'admin:orders_order_changelist' %}" style="background:#22223a;border:1px solid rgba(201,168,76,.3);color:#c9a84c;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;"><i class="fas fa-shopping-bag me-1"></i> View Orders</a>
+      <a href="{% url 'admin:pages_contactmessage_changelist' %}" style="background:#22223a;border:1px solid rgba(201,168,76,.3);color:#c9a84c;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;"><i class="fas fa-envelope me-1"></i> Messages</a>
+    </div>
+  </div>
+
+  <!-- App List -->
+  {% if app_list %}
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;">
+    {% for app in app_list %}
+    <div style="background:#1a1a2e;border:1px solid rgba(201,168,76,.15);border-radius:10px;overflow:hidden;">
+      <div style="background:linear-gradient(90deg,#22223a,#1a1a2e);padding:10px 16px;border-bottom:1px solid rgba(201,168,76,.1);">
+        <h3 style="color:#c9a84c;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin:0;">{{ app.name }}</h3>
+      </div>
+      <table style="width:100%;border-collapse:collapse;">
+        {% for model in app.models %}
+        <tr style="border-bottom:1px solid rgba(201,168,76,.06);">
+          <td style="padding:9px 16px;color:rgba(255,255,255,.8);font-size:13px;">
+            {% if model.admin_url %}<a href="{{ model.admin_url }}" style="color:rgba(255,255,255,.85);">{{ model.name }}</a>
+            {% else %}{{ model.name }}{% endif %}
+          </td>
+          <td style="padding:9px 16px;text-align:right;white-space:nowrap;">
+            {% if model.add_url %}<a href="{{ model.add_url }}" style="color:#c9a84c;font-size:11px;padding:3px 10px;border:1px solid rgba(201,168,76,.3);border-radius:4px;">+ Add</a>{% endif %}
+            {% if model.admin_url %}<a href="{{ model.admin_url }}" style="color:rgba(255,255,255,.4);font-size:11px;padding:3px 10px;border:1px solid rgba(255,255,255,.08);border-radius:4px;margin-left:4px;">View</a>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+  <div style="background:#1a1a2e;border:1px solid rgba(201,168,76,.15);border-radius:10px;overflow:hidden;">
+    <h2 style="background:linear-gradient(90deg,#22223a,#1a1a2e);color:#c9a84c;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:12px 16px;margin:0;border-bottom:1px solid rgba(201,168,76,.1);">
+      Recent Actions
+    </h2>
+    {% get_admin_log 8 as admin_log for_user user %}
+    {% if not admin_log %}
+    <p style="padding:16px;color:rgba(255,255,255,.3);font-size:12px;margin:0;">No recent actions.</p>
+    {% else %}
+    <ul style="margin:0;padding:8px 0;list-style:none;">
+      {% for entry in admin_log %}
+      <li style="padding:8px 14px;border-bottom:1px solid rgba(201,168,76,.06);font-size:12px;">
+        {% if entry.is_addition %}<span style="color:#75e8a8;">+</span>
+        {% elif entry.is_change %}<span style="color:#c9a84c;">✎</span>
+        {% elif entry.is_deletion %}<span style="color:#ff6b6b;">✕</span>{% endif %}
+        {% if entry.get_admin_url %}<a href="{{ entry.get_admin_url }}" style="color:rgba(255,255,255,.8);">{{ entry.object_repr }}</a>
+        {% else %}<span style="color:rgba(255,255,255,.8);">{{ entry.object_repr }}</span>{% endif %}
+        <br><span style="color:rgba(255,255,255,.3);font-size:11px;">{{ entry.content_type }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
