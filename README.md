@@ -42,23 +42,6 @@ Admin panel: http://127.0.0.1:8000/control-panel/
 
 ---
 
-## 📦 ZIP Delivery Plan
-
-| ZIP | Contents |
-|-----|----------|
-| **ZIP 1 (this file)** | Project foundation + Accounts app (models, admin, views, urls, forms, signals) |
-| **ZIP 2** | Shop app – Product, Category, Variation, Banner models + admin + views |
-| **ZIP 3** | Orders app – Order, OrderItem, Cart, Checkout models + admin + views |
-| **ZIP 4** | Blog app – Blog, Category, Tag, Comment, FAQ models + admin + views |
-| **ZIP 5** | Pages app – Homepage, About, Contact, SiteSettings + context processors |
-| **ZIP 6** | Reviews, Newsletter, Coupons apps + complete admin dashboard |
-| **ZIP 7** | All HTML templates (base, home, shop, product detail, cart, checkout) |
-| **ZIP 8** | All remaining templates (blog, accounts, contact, about, dashboard) |
-| **ZIP 9** | Static files – CSS (luxury design), JavaScript (cart, wishlist, search) |
-| **ZIP 10** | Final – Migrations, fixtures (sample data), deployment configs |
-
----
-
 ## 🗂️ Project Structure
 ```
 aromatic_breeze/
